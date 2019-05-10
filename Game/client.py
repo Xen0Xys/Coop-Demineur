@@ -12,10 +12,18 @@ class ClientMessage():
 
 class Network():
     def __init__(self):
-        self.clientOn=True
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        pass
     def StartClient(self):
-        self.server.connect(("localhost", 1001))
+        threading.Thread(target=self.__StartClient).start()
+    def __StartClient(self):
+        try:
+            self.clientOn=True
+            self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server.connect(("localhost", 1001))
+        except RuntimeError as e:
+            print(e)
+        except ConnectionRefusedError as e:
+            print(e)
     def GetMessages(self, function):
         try:
             while self.clientOn:
