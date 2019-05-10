@@ -48,7 +48,7 @@ class EventHandler():
         pass
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
-    def GetEvent(evt):
+    def GetEvent(self, evt):
         print(evt.message)
 
 class Main(Network, EventHandler):
@@ -59,6 +59,7 @@ class Main(Network, EventHandler):
     def Start(self):
         self.StartServer()
         self.StartEventHandler()
+
 
 if __name__=="__main__":
     main=Main()
