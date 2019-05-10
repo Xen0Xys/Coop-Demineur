@@ -56,11 +56,24 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def Deserializer(self, message):
+        dico={}
+        dico["message_type"] = message.split(";")[0]
+        dico2={}
+        dico2["name"] = message.split(";")[1]
+        dico2["args"] = message.split(";")[1].split("*")
+        del dico2["args"][0]
+        dico["message_body"] = [dico2["name"], dico2["args"]]
+        return dico
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        message = self.Deserializer(evt.message)
         if evt.message=="":
             self.CloseClient(evt.client)
+        if message["message_type"]=="instruct":
+            if message["message_body"]["name"] == "close_connection":
+                self.CloseClient(evt.client)
         print(evt.message)
 
 class Main(Network, EventHandler):
