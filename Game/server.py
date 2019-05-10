@@ -18,6 +18,16 @@ class Network():
         self.server.bind(("localhost", 1001))
         self.server.listen(5)
         threading.Thread(target=self.AcceptClient).start()
+    def CloseServer(self):
+        for client in self.ClientList:
+            client.close()
+        self.server.close()
+    def CloseClient(self, client):
+        client.close()
+        for i in range(len(self.ClientList)):
+            if client==self.ClientList[i]:
+                del self.ClientList[i]
+                break
     def AcceptClient(self):
         try:
             while self.serverOn:
@@ -49,6 +59,8 @@ class EventHandler():
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        if evt.message=="":
+            self.CloseClient(evt.client)
         print(evt.message)
 
 class Main(Network, EventHandler):
