@@ -5,6 +5,42 @@ import socket
 import select
 import threading
 
+class ClientMessage():
+    def __init__(self, message, server):
+        self.message=message
+        self.server=server
+
+class Network():
+    def __init__(self):
+        self.clientOn=True
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def StartClient(self):
+        self.server.connect(("localhost", 1001))
+    def GetMessages(self, function):
+        try:
+            while self.clientOn:
+                if len(self.ClientList)>0:
+                    rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                    for server in rlist:
+                        message = server.recv(1024).decode()
+                        evt = ClientMessage(message, server)
+                        function(evt)
+        except RuntimeError as e:
+            print(e)
+    def SendMessage(self, message, server):
+        threading.Thread(target=self.__SendMessage, args=(message, server,)).start()
+    def __SendMessage(self, message, server):
+        server.send(message.encode())
+
+class EventHandler():
+    def __init__(self):
+        pass
+    def StartEventHandler(self):
+        self.GetMessages(self.GetEvent)
+    def GetEvent(evt):
+        print(evt.message)
+
+        
 class MenuPrincipal(Tk):
     def __init__(self):
         Tk.__init__(self)
