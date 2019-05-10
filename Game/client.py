@@ -20,6 +20,7 @@ class Network():
             self.clientOn=True
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server.connect(("localhost", 1001))
+            self.SendMessage("Client connect", self.server)
         except RuntimeError as e:
             print(e)
         except ConnectionRefusedError as e:
@@ -45,7 +46,7 @@ class EventHandler():
         pass
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
-    def GetEvent(evt):
+    def GetEvent(self, evt):
         print(evt.message)
 
         
