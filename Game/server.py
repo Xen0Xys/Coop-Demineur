@@ -60,5 +60,5 @@ class Main(Network, EventHandler):
         self.StartServer()
         self.StartEventHandler()
 
-
-main=Main()
+if __name__=="__main__":
+    main=Main()
