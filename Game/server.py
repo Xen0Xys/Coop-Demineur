@@ -15,24 +15,27 @@ class Network():
         self.ClientList=[]
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self):
-        self.server.bind((hote, port))
+        self.server.bind(("localhost", 1001))
         self.server.listen(5)
         threading.Thread(target=self.AcceptClient).start()
     def AcceptClient(self):
         try:
-            while serverOn:
-                client, connectionInfos = self.server.accept()
-                self.ClientList.append(client)
+            while self.serverOn:
+                rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                for connection in rlist:
+                    client, connectionInfos = connection.accept()
+                    self.ClientList.append(client)
         except RuntimeError as e:
             print(e)
-    def GetMessage(self, function):
+    def GetMessages(self, function):
         try:
-            while serverOn:
-                rlist, wlist, xlist = select.select(clients_connectes, [], [], 0.05)
-                for client in rlist:
-                    message = client.recv(1024).decode()
-                    evt = ClientMessage(message, client)
-                    function(evt)
+            while self.serverOn:
+                if len(self.ClientList)>0:
+                    rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
+                    for client in rlist:
+                        message = client.recv(1024).decode()
+                        evt = ClientMessage(message, client)
+                        function(evt)
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, client):
@@ -44,9 +47,9 @@ class EventHandler():
     def __init__(self):
         pass
     def StartEventHandler(self):
-        self.GetMessages#Ici
+        self.GetMessages(self.GetEvent)
     def GetEvent(evt):
-        pass
+        print(evt.message)
 
 class Main(Network, EventHandler):
     def __init__(self):
@@ -54,7 +57,8 @@ class Main(Network, EventHandler):
         EventHandler.__init__(self)
         self.Start()
     def Start(self):
-        pass
+        self.StartServer()
+        self.StartEventHandler()
 
 
 main=Main()
