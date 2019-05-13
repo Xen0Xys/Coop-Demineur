@@ -195,6 +195,7 @@ class MenuPrincipal(Tk, Game):
         loadingTextLabel.place(x=280,y=400)
 
 
+
 class Main(MenuPrincipal, Network):
     def __init__(self):
         MenuPrincipal.__init__(self)
