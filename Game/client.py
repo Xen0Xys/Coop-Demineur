@@ -101,7 +101,7 @@ class MenuPrincipal(Tk, Game):
         nomLabel.place(x=310,y=20)
         createurLabel=Label(self.interface,font=self.font2,text="Jeu cree par Czekaj Tom et Duchene Guillaume", bg="grey")
         createurLabel.place(x=10,y=760)
-     def SoloInterface(self):
+    def SoloInterface(self):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
