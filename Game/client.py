@@ -55,8 +55,24 @@ class EventHandler():
 class Game():
     def __init__(self):
         pass
-    def StartGame():
-        pass
+    def StartGame(self):
+        self.geometry("800x800+10+10")
+        self.configure(bg="black")
+        self.title("Demineur en cooperation")
+        self.resizable(width=FALSE, height=FALSE)
+        self.mat=[]
+        for i in range(self.nbrDeCaselongueur.get()):
+            temp=[]
+            for j in range(self.nbrDeCaseHauteur.get()):
+                temp.append(0)
+            self.mat.append(temp)
+        print(self.mat)
+        for k in range(self.nbrDeBombe.get()):
+            r=randint(0, self.nbrDeCaselongueur.get())
+            s=randint(0, self.nbrDeCaseHauteur.get())
+            if self.mat[r][s]==1:
+                self.nbrDeBombe.set(self.nbrDeBombe+1)
+            self.mat[r][s]=1
 
 class MenuPrincipal(Tk, Game):
     def __init__(self):
@@ -104,27 +120,34 @@ class MenuPrincipal(Tk, Game):
         createurLabel=Label(self.interface,font=self.font2,text="Jeu cree par Czekaj Tom et Duchene Guillaume", bg="grey")
         createurLabel.place(x=10,y=760)
     def SoloInterface(self):
+        def SoloInterface(self):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
         self.font_bts_quitter=Font(family="Helvetica",size=10)
         self.font2=Font(family="Helvetica",size=8)
         self.interface.pack()
-        self.nbrDeCaseParCoter= IntVar()
-        self.nbrDeCaseParCoter.set(10)
+        self.nbrDeCaseHauteur= IntVar()
+        self.nbrDeCaseHauteur.set(10)
+        self.nbrDeCaselongueur= IntVar()
+        self.nbrDeCaselongueur.set(10)
         self.nbrDeBombe= IntVar()
         self.nbrDeBombe.set(10)
         nomLabel=Label(self.interface,font=self.font,text="Demineur en cooperation", bg="grey")
         nomLabel.place(x=310,y=20)
-        nbrDeCaseParCoterLabel=Label(self.interface,font=self.font,text="Nombre de case par coter:", bg="grey")
-        nbrDeCaseParCoterLabel.place(x=20,y=170)
-        nbrDeCaseParCoterScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseParCoter )
-        nbrDeCaseParCoterScale.place(x=300,y=160)
+        nbrDeCaseHauteurLabel=Label(self.interface,font=self.font,text="Nombre de case en hauteur:", bg="grey")
+        nbrDeCaseHauteurLabel.place(x=20,y=170)
+        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
+        nbrDeCaseHauteurScale.place(x=300,y=160)
         nbrDeBombeLabel=Label(self.interface,font=self.font,text="Nombre de bombes:", bg="grey")
-        nbrDeBombeLabel.place(x=20,y=270)
+        nbrDeBombeLabel.place(x=20,y=370)
         nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=99,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
-        nbrDeBombeScale.place(x=300,y=260)
-        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font)
+        nbrDeBombeScale.place(x=300,y=360)
+        nbrDeCaseLongueurLabel=Label(self.interface,font=self.font,text="Nombre de case en longueur:", bg="grey")
+        nbrDeCaseLongueurLabel.place(x=20,y=270)
+        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
+        nbrDeCaseLongueurScale.place(x=300,y=260)
+        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command= self.StartGame)#, command=self.LoadingMenuInterface
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
@@ -150,21 +173,27 @@ class MenuPrincipal(Tk, Game):
         self.font_bts_quitter=Font(family="Helvetica",size=10)
         self.font2=Font(family="Helvetica",size=8)
         self.interface.pack()
-        self.nbrDeCaseParCoter= IntVar()
-        self.nbrDeCaseParCoter.set(10)
+        self.nbrDeCaseHauteur= IntVar()
+        self.nbrDeCaseHauteur.set(10)
+        self.nbrDeCaselongueur= IntVar()
+        self.nbrDeCaselongueur.set(10)
         self.nbrDeBombe= IntVar()
         self.nbrDeBombe.set(10)
         nomLabel=Label(self.interface,font=self.font,text="Demineur en cooperation", bg="grey")
         nomLabel.place(x=310,y=20)
-        nbrDeCaseParCoterLabel=Label(self.interface,font=self.font,text="Nombre de case par coter:", bg="grey")
-        nbrDeCaseParCoterLabel.place(x=20,y=170)
-        nbrDeCaseParCoterScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseParCoter )
-        nbrDeCaseParCoterScale.place(x=300,y=160)
+        nbrDeCaseHauteurLabel=Label(self.interface,font=self.font,text="Nombre de case en hauteur:", bg="grey")
+        nbrDeCaseHauteurLabel.place(x=20,y=170)
+        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
+        nbrDeCaseHauteurScale.place(x=300,y=160)
         nbrDeBombeLabel=Label(self.interface,font=self.font,text="Nombre de bombes:", bg="grey")
-        nbrDeBombeLabel.place(x=20,y=270)
+        nbrDeBombeLabel.place(x=20,y=370)
         nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=99,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
-        nbrDeBombeScale.place(x=300,y=260)
-        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font)
+        nbrDeBombeScale.place(x=300,y=360)
+        nbrDeCaseLongueurLabel=Label(self.interface,font=self.font,text="Nombre de case en longueur:", bg="grey")
+        nbrDeCaseLongueurLabel.place(x=20,y=270)
+        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
+        nbrDeCaseLongueurScale.place(x=300,y=260)
+        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
