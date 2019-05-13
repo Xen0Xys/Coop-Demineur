@@ -49,10 +49,16 @@ class EventHandler():
     def GetEvent(self, evt):
         print(evt.message)
 
-        
-class MenuPrincipal(Tk):
+class Game():
+    def __init__(self):
+        pass
+    def StartGame():
+        pass
+
+class MenuPrincipal(Tk, Game):
     def __init__(self):
         Tk.__init__(self)
+        Game.__init__(self)
         self.InitInterface()
         self.mainloop()
     def StartHost(self):
