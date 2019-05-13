@@ -61,19 +61,30 @@ class Game():
         self.configure(bg="black")
         self.title("Demineur en cooperation")
         self.resizable(width=FALSE, height=FALSE)
+        self.CreateMatrice()
+    def CreateMatrice(self):
         self.mat=[]
         for i in range(self.nbrDeCaselongueur.get()):
             temp=[]
             for j in range(self.nbrDeCaseHauteur.get()):
                 temp.append(0)
             self.mat.append(temp)
-        print(self.mat)
+        self.PlaceBombe()
+    def PlaceBombe(self):
+        self.nombreDeBombeMalPlacer=0
         for k in range(self.nbrDeBombe.get()):
-            r=randint(0, self.nbrDeCaselongueur.get())
-            s=randint(0, self.nbrDeCaseHauteur.get())
+            r=randint(0, self.nbrDeCaselongueur.get()-1)
+            s=randint(0, self.nbrDeCaseHauteur.get()-1)
             if self.mat[r][s]==1:
-                self.nbrDeBombe.set(self.nbrDeBombe+1)
-            self.mat[r][s]=1
+                self.nombreDeBombeMalPlacer=self.nombreDeBombeMalPlacer+1
+            else:
+                self.mat[r][s]=1
+        if self.nombreDeBombeMalPlacer>0:
+            self.nbrDeBombe.set(self.nombreDeBombeMalPlacer)
+            self.PlaceBombe()
+        else:
+            print(self.mat)
+            print(self.nbrDeBombe.get())
 
 class MenuPrincipal(Tk, Game):
     def __init__(self):
