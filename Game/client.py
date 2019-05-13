@@ -55,6 +55,14 @@ class MenuPrincipal(Tk):
         Tk.__init__(self)
         self.InitInterface()
         self.mainloop()
+    def StartHost(self):
+        threading.Thread(target=self.__StartHost).start()
+    def __StartHost(self):
+        pass
+    def StartJoin(self):
+        threading.Thread(target=self.__StartJoin).start()
+    def __StartJoin(self):
+        pass
     def ResetInterface(self):
         for item in self.winfo_children():
             item.destroy()
