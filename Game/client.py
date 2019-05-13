@@ -1,9 +1,10 @@
-from tkinter import *
+from server import Main as StartServer
 from tkinter.font import Font
+from tkinter import *
 from time import sleep
+import threading
 import socket
 import select
-import threading
 
 class ClientMessage():
     def __init__(self, message, server):
@@ -25,6 +26,8 @@ class Network():
             print(e)
         except ConnectionRefusedError as e:
             print(e)
+            return False
+        return True
     def GetMessages(self, function):
         try:
             while self.clientOn:
@@ -68,7 +71,11 @@ class MenuPrincipal(Tk, Game):
     def StartJoin(self):
         threading.Thread(target=self.__StartJoin).start()
     def __StartJoin(self):
-        pass
+        status = self._Network__StartClient()
+        if status==True:
+            pass #Code si client connecte
+        else:
+            pass #Code en cas de non-connection
     def ResetInterface(self):
         for item in self.winfo_children():
             item.destroy()
@@ -142,16 +149,16 @@ class MenuPrincipal(Tk, Game):
         nbrDeBombeLabel.place(x=20,y=270)
         nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=99,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
         nbrDeBombeScale.place(x=300,y=260)
-        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font)
+        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.StartJoin)
         play.place(x=120,y=680)
 
 
-class Main(MenuPrincipal):
+class Main(MenuPrincipal, Network):
     def __init__(self):
         MenuPrincipal.__init__(self)
 
 
-        
+
 
 if __name__=="__main__":
     main=Main()
