@@ -127,7 +127,7 @@ class MenuPrincipal(Tk, Game):
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
-     def MultiPlayerChoice(self):
+    def MultiPlayerChoice(self):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
