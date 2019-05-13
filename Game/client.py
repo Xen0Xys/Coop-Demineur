@@ -86,6 +86,7 @@ class MenuPrincipal(Tk, Game):
         self.resizable(width=FALSE, height=FALSE)
         self.MainInterface()
     def MainInterface(self):
+        self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
         self.font_bts_quitter=Font(family="Helvetica",size=10)
