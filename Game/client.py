@@ -80,7 +80,7 @@ class MenuPrincipal(Tk, Game):
         for item in self.winfo_children():
             item.destroy()
     def InitInterface(self):
-        self.geometry("800x800")
+        self.geometry("800x800+10+10")
         self.configure(bg="black")
         self.title("Demineur en cooperation")
         self.resizable(width=FALSE, height=FALSE)
