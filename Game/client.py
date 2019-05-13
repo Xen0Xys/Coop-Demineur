@@ -71,11 +71,12 @@ class MenuPrincipal(Tk, Game):
     def StartJoin(self):
         threading.Thread(target=self.__StartJoin).start()
     def __StartJoin(self):
+        self.loadingText.set("Connection au client en cours...")
         status = self._Network__StartClient()
         if status==True:
-            pass #Code si client connecte
+            self.loadingText.set("Connecte au client, en attente du lancement...")
         else:
-            pass #Code en cas de non-connection
+            self.FailedJoinMenu()
     def ResetInterface(self):
         for item in self.winfo_children():
             item.destroy()
@@ -123,7 +124,7 @@ class MenuPrincipal(Tk, Game):
         nbrDeBombeLabel.place(x=20,y=270)
         nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=99,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
         nbrDeBombeScale.place(x=300,y=260)
-        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font)
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
@@ -136,10 +137,10 @@ class MenuPrincipal(Tk, Game):
         self.interface.pack()
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
-        creeUnePartie=Button(self.interface, text="cree une partie",bg='#999999',width=50,height=4, font=self.font)
-        creeUnePartie.place(x=150,y=160)
-        rejoindreUnePartie=Button(self.interface, text="rejondre une partie",bg='#999999',width=50,height=4, font=self.font)
-        rejoindreUnePartie.place(x=150,y=360)
+        creeUnePartie=Button(self.interface, text="Cree une partie",bg='#999999',width=50,height=4, font=self.font, command=self.MultiInterface)
+        creeUnePartie.place(x=120,y=250)
+        rejoindreUnePartie=Button(self.interface, text="Rejondre une partie",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        rejoindreUnePartie.place(x=120,y=400)
         nomLabel=Label(self.interface,font=self.font,text="Demineur en cooperation", bg="grey")
         nomLabel.place(x=310,y=20)
     def MultiInterface(self):
@@ -167,7 +168,7 @@ class MenuPrincipal(Tk, Game):
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
         retour.place(x=750,y=750)
-    def LoadingMenuInterface(self, message):
+    def LoadingMenuInterface(self, message=""):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
@@ -177,6 +178,20 @@ class MenuPrincipal(Tk, Game):
         self.loadingText= StringVar()
         self.loadingText.set(message)
         loadingTextLabel=Label(self.interface,font=self.font,textvariable=self.loadingText, bg="grey")
+        loadingTextLabel.place(x=280,y=400)
+        self.StartJoin()
+    def FailedJoinMenu(self):
+        self.ResetInterface()
+        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.font=Font(family="Helvetica",size=14)
+        self.font_bts_quitter=Font(family="Helvetica",size=10)
+        self.font2=Font(family="Helvetica",size=8)
+        self.interface.pack()
+        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MainInterface)
+        retour.place(x=750,y=750)
+        creeUnePartie=Button(self.interface, text="Reesayer",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        creeUnePartie.place(x=120,y=550)
+        loadingTextLabel=Label(self.interface,font=self.font,text="La connection a echoue", bg="grey")
         loadingTextLabel.place(x=280,y=400)
 
 
