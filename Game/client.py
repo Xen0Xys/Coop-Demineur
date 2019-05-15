@@ -34,11 +34,16 @@ class Network():
     def GetMessages(self, function):
         try:
             while self.clientOn:
-                rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
-                for server in rlist:
-                    message = server.recv(1024).decode()
-                    evt = ClientMessage(message, server)
-                    function(evt)
+                try:
+                    rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                    for server in rlist:
+                        message = server.recv(1024).decode()
+                        evt = ClientMessage(message, server)
+                        function(evt)
+                except OSError as e:
+                    print(e)
+                except ValueError as e:
+                    print(e)
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, server):
