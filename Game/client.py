@@ -17,6 +17,8 @@ class Network():
         pass
     def StartClient(self):
         threading.Thread(target=self.__StartClient).start()
+    def StopClient(self):
+        self.clientOn=False
     def __StartClient(self):
         try:
             self.clientOn=True
