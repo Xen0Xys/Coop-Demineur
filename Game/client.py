@@ -109,13 +109,20 @@ class MenuPrincipal(Tk, Game):
         Tk.__init__(self)
         Game.__init__(self)
         self.InitInterface()
+        self.protocol("WM_DELETE_WINDOW", self.onWindowClosed)
         self.mainloop()
+    def onWindowClosed(self):
+        self.StopClient()
+        try:
+            self.localServer.CloseServer()
+        except AttributeError:
+            pass
+        self.destroy()
     def StartHost(self):
         threading.Thread(target=self.__StartHost).start()
         self.StartJoin()
     def __StartHost(self):
         self.localServer=Server()
-        print(self.localServer)
         self.localServer.Start()
     def __StartGame(self):
         self.localServer.send()
@@ -231,7 +238,9 @@ class MenuPrincipal(Tk, Game):
         self.StartHost()
     def ReturnToMainMenu(self):
         self.__StopServer()
+        self.StopClient()
         self.MultiPlayerChoice()
+
 
 
 
