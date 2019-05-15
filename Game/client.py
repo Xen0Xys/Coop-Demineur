@@ -22,7 +22,7 @@ class Network():
             self.clientOn=True
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server.connect(("localhost", 1001))
-            self.SendMessage("Client connect", self.server)
+            self.SendMessage("message;dev_message*Client connecte", self.server)
         except RuntimeError as e:
             print(e)
         except ConnectionRefusedError as e:
@@ -32,12 +32,11 @@ class Network():
     def GetMessages(self, function):
         try:
             while self.clientOn:
-                if len(self.ClientList)>0:
-                    rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
-                    for server in rlist:
-                        message = server.recv(1024).decode()
-                        evt = ClientMessage(message, server)
-                        function(evt)
+                rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                for server in rlist:
+                    message = server.recv(1024).decode()
+                    evt = ClientMessage(message, server)
+                    function(evt)
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, server):
@@ -48,9 +47,26 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def Deserializer(self, message):
+        dico={}
+        dico["message_type"] = message.split(";")[0]
+        dico2={}
+        dico2["name"] = message.split(";")[1].split("*")[0]
+        dico2["args"] = message.split(";")[1].split("*")
+        del dico2["args"][0]
+        dico["message_body"] = dico2
+        return dico
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        if evt.message=="":
+            self.server.close()
+        else:
+            message = self.Deserializer(evt.message)
+            if message["message_type"]=="instruct":
+                if message["message_body"]["name"] == "client_account_changed":
+                    print(message["message_body"]["args"][0])
+                    self.clientCount.set("Clients connectes: {}".format(int(message["message_body"]["args"][0])))
         print(evt.message)
 
 class Game():
@@ -94,13 +110,21 @@ class MenuPrincipal(Tk, Game):
         self.mainloop()
     def StartHost(self):
         threading.Thread(target=self.__StartHost).start()
+        self.StartJoin()
     def __StartHost(self):
-        pass
+        self.localServer=Server()
+        print(self.localServer)
+        self.localServer.Start()
+    def __StartGame(self):
+        self.localServer.send()
+    def __StopServer(self):
+        self.localServer.CloseServer()
     def StartJoin(self):
         threading.Thread(target=self.__StartJoin).start()
     def __StartJoin(self):
         self.loadingText.set("Connection au client en cours...")
         status = self._Network__StartClient()
+        threading.Thread(target=self.StartEventHandler()).start()
         if status==True:
             self.loadingText.set("Connecte au client, en attente du lancement...")
         else:
@@ -156,7 +180,7 @@ class MenuPrincipal(Tk, Game):
         nbrDeCaseLongueurLabel.place(x=20,y=270)
         nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
         nbrDeCaseLongueurScale.place(x=300,y=260)
-        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.WaitClientMenu)
         play.place(x=120,y=680)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.destroy)
         retour.place(x=750,y=750)
@@ -185,6 +209,27 @@ class MenuPrincipal(Tk, Game):
         creeUnePartie.place(x=120,y=550)
         loadingTextLabel=Label(self.interface,font=self.font,text="La connection a echoue", bg="grey")
         loadingTextLabel.place(x=280,y=400)
+    def WaitClientMenu(self):
+        self.ResetInterface()
+        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.font=Font(family="Helvetica",size=14)
+        self.font_bts_quitter=Font(family="Helvetica",size=10)
+        self.font2=Font(family="Helvetica",size=8)
+        self.interface.pack()
+        self.clientCount=StringVar()
+        self.clientCount.set("Clients connectes: 0")
+        self.loadingText=StringVar()
+        Label(self, textvariable=self.clientCount, font=self.font,bg="#999999").place(x=280, y=300)
+        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.ReturnToMainMenu)
+        retour.place(x=750,y=750)
+        creeUnePartie=Button(self.interface, text="Commencer la partie",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        creeUnePartie.place(x=120,y=550)
+        loadingTextLabel=Label(self.interface,font=self.font,text="En attente de la connection de clients", bg="grey")
+        loadingTextLabel.place(x=280,y=400)
+        self.StartHost()
+    def ReturnToMainMenu(self):
+        self.__StopServer()
+        self.MultiPlayerChoice()
 
 
 
