@@ -19,6 +19,7 @@ class Network():
         self.server.listen(5)
         threading.Thread(target=self.AcceptClient).start()
     def CloseServer(self):
+        self.serverOn=False
         for client in self.ClientList:
             client.close()
         self.server.close()
@@ -32,22 +33,32 @@ class Network():
     def AcceptClient(self):
         try:
             while self.serverOn:
-                rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
-                for connection in rlist:
-                    client, connectionInfos = connection.accept()
-                    self.ClientList.append(client)
-                    self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
+                try:
+                    rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                    for connection in rlist:
+                        client, connectionInfos = connection.accept()
+                        self.ClientList.append(client)
+                        self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
+                except OSError as e:
+                    print(e)
+                except ValueError as e:
+                    print(e)
         except RuntimeError as e:
             print(e)
     def GetMessages(self, function):
         try:
             while self.serverOn:
                 if len(self.ClientList)>0:
-                    rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
-                    for client in rlist:
-                        message = client.recv(1024).decode()
-                        evt = ClientMessage(message, client)
-                        function(evt)
+                    try:
+                        rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
+                        for client in rlist:
+                            message = client.recv(1024).decode()
+                            evt = ClientMessage(message, client)
+                            function(evt)
+                    except OSError as e:
+                        print(e)
+                    except ValueError as e:
+                        print(e)
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, client):
