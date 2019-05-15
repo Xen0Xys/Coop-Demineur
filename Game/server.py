@@ -22,6 +22,7 @@ class Network():
         for client in self.ClientList:
             client.close()
         self.server.close()
+        print("Server closed")
     def CloseClient(self, client):
         client.close()
         for i in range(len(self.ClientList)):
@@ -35,6 +36,7 @@ class Network():
                 for connection in rlist:
                     client, connectionInfos = connection.accept()
                     self.ClientList.append(client)
+                    self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
         except RuntimeError as e:
             print(e)
     def GetMessages(self, function):
@@ -60,10 +62,10 @@ class EventHandler():
         dico={}
         dico["message_type"] = message.split(";")[0]
         dico2={}
-        dico2["name"] = message.split(";")[1]
+        dico2["name"] = message.split(";")[1].split("*")[0]
         dico2["args"] = message.split(";")[1].split("*")
         del dico2["args"][0]
-        dico["message_body"] = [dico2["name"], dico2["args"]]
+        dico["message_body"] = dico2
         return dico
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
@@ -74,13 +76,15 @@ class EventHandler():
         if message["message_type"]=="instruct":
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
-        print(evt.message)
+        elif message["message_type"]=="message":
+            if message["message_body"]["name"] == "dev_message":
+                print("[Server] : " + message["message_body"]["args"][0])
 
 class Main(Network, EventHandler):
     def __init__(self):
         Network.__init__(self)
         EventHandler.__init__(self)
-        self.Start()
+        #self.Start()
     def Start(self):
         self.StartServer()
         self.StartEventHandler()
