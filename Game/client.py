@@ -1,4 +1,4 @@
-from server import Main as StartServer
+from server import Main as Server
 from tkinter.font import Font
 from random import randint
 from tkinter import *
