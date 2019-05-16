@@ -80,34 +80,68 @@ class Game():
     def __init__(self):
         pass
     def StartGame(self):
+        self.ResetInterface()
         self.geometry("800x800+10+10")
         self.configure(bg="black")
         self.title("Demineur en cooperation")
         self.resizable(width=FALSE, height=FALSE)
+        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.interface.pack()
         self.CreateMatrice()
     def CreateMatrice(self):
         self.mat=[]
         for i in range(self.nbrDeCaselongueur.get()):
             temp=[]
             for j in range(self.nbrDeCaseHauteur.get()):
-                temp.append(0)
+                temp.append(1)
             self.mat.append(temp)
         self.PlaceBombe()
     def PlaceBombe(self):
-        self.nombreDeBombeMalPlacer=0
-        for k in range(self.nbrDeBombe.get()):
+        k=0
+        while k<self.nbrDeBombe.get():
+            k=k+1
             r=randint(0, self.nbrDeCaselongueur.get()-1)
             s=randint(0, self.nbrDeCaseHauteur.get()-1)
-            if self.mat[r][s]==1:
-                self.nombreDeBombeMalPlacer=self.nombreDeBombeMalPlacer+1
+            if self.mat[r][s]==2:
+                k=k-1
             else:
-                self.mat[r][s]=1
-        if self.nombreDeBombeMalPlacer>0:
-            self.nbrDeBombe.set(self.nombreDeBombeMalPlacer)
-            self.PlaceBombe()
-        else:
-            print(self.mat)
-            print(self.nbrDeBombe.get())
+                self.mat[r][s]=2
+        print(self.mat)
+        self.GameWin()
+    def GameWin(self):
+        self.bind("<Button-1>",self.OnLeftClick)
+        for i in range(self.nbrDeCaseHauteur.get()):
+            for j in range(self.nbrDeCaselongueur.get()):
+                #on place l'image en x=J*25 y=I*25
+                pass
+    def OnRightClick(self):
+        pass
+    def OnLeftClick(self,event):
+        if self.mat[event.x//25][event.y//25]==2:
+            print("vous avez explose")
+        if self.mat[event.x//25][event.y//25]==0:
+            pass
+        if self.mat[event.x//25][event.y//25]==1:
+            self.NbrDeBombeACoter=0
+            self.mat[event.x//25][event.y//25]=0
+            if self.mat[(event.x//25)+1][(event.y//25)]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)-1][(event.y//25)]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)][(event.y//25)+1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)][(event.y//25)-1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)+1][(event.y//25)+1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)+1][(event.y//25)-1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)-1][(event.y//25)+1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            if self.mat[(event.x//25)-1][(event.y//25)-1]==2:
+                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
+            print(self.NbrDeBombeACoter)
+
 
 class MenuPrincipal(Tk, Game):
     def __init__(self):
