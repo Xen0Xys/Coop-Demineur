@@ -69,6 +69,10 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def GenerateMatrice(self):
+        return ""
+    def SerializeMatrice(self):
+        pass
     def Deserializer(self, message):
         dico={}
         dico["message_type"] = message.split(";")[0]
@@ -87,9 +91,14 @@ class EventHandler():
         if message["message_type"]=="instruct":
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
+            elif message["message_body"]["name"] == "start":
+                msg=self.GenerateMatrice()
+                for client in self.ClientList:
+                    client.send("instruct;start*args".encode())
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
+        print(message)
 
 class Main(Network, EventHandler):
     def __init__(self):
