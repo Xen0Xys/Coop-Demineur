@@ -172,7 +172,7 @@ class MenuPrincipal(Tk, Game):
     def __StartJoin(self):
         self.loadingText.set("Connection au client en cours...")
         status = self._Network__StartClient()
-        threading.Thread(target=self.StartEventHandler()).start()
+        threading.Thread(target=self.StartEventHandler).start()
         if status==True:
             self.loadingText.set("Connecte au client, en attente du lancement...")
         else:
@@ -283,7 +283,7 @@ class MenuPrincipal(Tk, Game):
 
 
 
-class Main(MenuPrincipal, Network):
+class Main(MenuPrincipal, Network, EventHandler):
     def __init__(self):
         MenuPrincipal.__init__(self)
 
