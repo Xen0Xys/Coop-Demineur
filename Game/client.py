@@ -24,7 +24,7 @@ class Network():
             self.clientOn=True
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server.connect(("localhost", 1001))
-            self.SendMessage("message;dev_message*Client connecte", self.server)
+            self.SendMessage("message;dev_message*Client connecte")
         except RuntimeError as e:
             print(e)
         except ConnectionRefusedError as e:
@@ -46,10 +46,10 @@ class Network():
                     print(e)
         except RuntimeError as e:
             print(e)
-    def SendMessage(self, message, server):
-        threading.Thread(target=self.__SendMessage, args=(message, server,)).start()
-    def __SendMessage(self, message, server):
-        server.send(message.encode())
+    def SendMessage(self, message):
+        threading.Thread(target=self.__SendMessage, args=(message,)).start()
+    def __SendMessage(self, message):
+        self.server.send(message.encode())
 
 class EventHandler():
     def __init__(self):
@@ -74,6 +74,8 @@ class EventHandler():
                 if message["message_body"]["name"] == "client_account_changed":
                     print(message["message_body"]["args"][0])
                     self.clientCount.set("Clients connectes: {}".format(int(message["message_body"]["args"][0])))
+                elif message["message_body"]["name"] == "start":
+                    self.StartGame()
         print(evt.message)
 
 class Game():
@@ -164,7 +166,7 @@ class MenuPrincipal(Tk, Game):
         self.localServer=Server()
         self.localServer.Start()
     def __StartGame(self):
-        self.localServer.send()
+        self.SendMessage("instruct;start*args")
     def __StopServer(self):
         self.localServer.CloseServer()
     def StartJoin(self):
@@ -270,7 +272,7 @@ class MenuPrincipal(Tk, Game):
         Label(self, textvariable=self.clientCount, font=self.font,bg="#999999").place(x=280, y=300)
         retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.ReturnToMainMenu)
         retour.place(x=750,y=750)
-        creeUnePartie=Button(self.interface, text="Commencer la partie",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        creeUnePartie=Button(self.interface, text="Commencer la partie",bg='#999999',width=50,height=4, font=self.font, command=self.__StartGame)
         creeUnePartie.place(x=120,y=550)
         loadingTextLabel=Label(self.interface,font=self.font,text="En attente de la connection de clients", bg="grey")
         loadingTextLabel.place(x=280,y=400)
@@ -292,3 +294,4 @@ class Main(MenuPrincipal, Network, EventHandler):
 
 if __name__=="__main__":
     main=Main()
+
