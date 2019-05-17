@@ -53,7 +53,7 @@ class Network():
                     try:
                         rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
                         for client in rlist:
-                            message = client.recv(1024).decode()
+                            message = client.recv(2048).decode()
                             evt = ClientMessage(message, client)
                             function(evt)
                     except OSError as e:
@@ -94,6 +94,7 @@ class EventHandler():
         final="instruct;start*{}*{}".format(height, width)
         for i in range(len(Matrice)):
             for j in range(len(Matrice)):
+                print(i*height+j)
                 final+="*" + str(Matrice[i][j])
         return final
     def Deserializer(self, message):
@@ -115,7 +116,10 @@ class EventHandler():
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
             elif message["message_body"]["name"] == "start":
-                msg=self.GenerateMatrice(10, 10, 10)
+                height = int(message["message_body"]["args"][0])
+                width = int(message["message_body"]["args"][1])
+                bombNbre = int(message["message_body"]["args"][2])
+                msg=self.GenerateMatrice(height, width, bombNbre)
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
         elif message["message_type"]=="message":
