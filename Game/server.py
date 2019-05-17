@@ -128,6 +128,11 @@ class EventHandler():
                 y=message["message_body"]["args"][1]
                 for client in self.ClientList:
                     self.SendMessage("instruct;left_click*{}*{}".format(x, y), client)
+            elif message["message_body"]["name"] == "left_click":
+                x=message["message_body"]["args"][0]
+                y=message["message_body"]["args"][1]
+                for client in self.ClientList:
+                    self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
