@@ -56,8 +56,12 @@ class EventHandler():
         pass
     def DeserializeMatrice(self, args):
         height=int(args[0])
+        self.nbrDeCaseHauteur=IntVar()
+        self.nbrDeCaseHauteur.set(height)
         del args[0]
         width=int(args[0])
+        self.nbrDeCaselongueur=IntVar()
+        self.nbrDeCaselongueur.set(width)
         del args[0]
         Matrice=[]
         for i in range(width):
@@ -193,7 +197,7 @@ class MenuPrincipal(Tk, Game):
         self.localServer=Server()
         self.localServer.Start()
     def __StartGame(self):
-        self.SendMessage("instruct;start*args")
+        self.SendMessage("instruct;start*{}*{}*{}".format(self.nbrDeCaseHauteur.get(), self.nbrDeCaselongueur.get(), self.nbrDeBombe.get()))
     def __StopServer(self):
         self.localServer.CloseServer()
     def StartJoin(self):
