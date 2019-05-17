@@ -117,7 +117,7 @@ class EventHandler():
             elif message["message_body"]["name"] == "start":
                 msg=self.GenerateMatrice(10, 10, 10)
                 for client in self.ClientList:
-                    client.send(msg.encode())
+                    self.SendMessage(msg, client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
