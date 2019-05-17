@@ -7,6 +7,11 @@ import threading
 import socket
 import select
 
+class EventObject():
+    def __init__(self, x, y):
+        self.x=x
+        self.y=y
+
 class ClientMessage():
     def __init__(self, message, server):
         self.message=message
@@ -82,6 +87,7 @@ class EventHandler():
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        """Recepton des messages"""
         print(evt.message)
         if evt.message=="":
             self.server.close()
@@ -94,6 +100,11 @@ class EventHandler():
                 elif message["message_body"]["name"] == "start":
                     self.mat=self.DeserializeMatrice(message["message_body"]["args"])
                     self.StartGame()
+                elif message["message_body"]["name"] == "left_click":
+                    x = int(message["message_body"]["args"][0])
+                    y = int(message["message_body"]["args"][1])
+                    event=EventObject(x, y)
+                    self.OnLeftClick(event)
 
 class Game():
     def __init__(self):
@@ -104,7 +115,7 @@ class Game():
         self.interface.pack()
         self.GameWin()
     def GameWin(self):
-        self.bind("<Button-1>",self.OnLeftClick)
+        self.bind("<Button-1>",self.OnLeftClickServer)
         self.bind("<Button-2>",self.OnRightClick)
         self.image_case_pleine = PhotoImage(file ='ressources/case_pleine.png')
         self.image_case_vide = PhotoImage(file ='ressources/case_vide.png')
@@ -123,6 +134,8 @@ class Game():
         for i in range(self.nbrDeCaseHauteur.get()):
             for j in range(self.nbrDeCaselongueur.get()):
                 self.interface.create_image(j*25,i*25, image=self.image_case_pleine, anchor=NW)
+    def OnLeftClickServer(self, evt):
+        self.SendMessage("instruct;left_click*{}*{}".format(evt.x, evt.y))
     def OnRightClick(self):
         pass
     def OnLeftClick(self,event):

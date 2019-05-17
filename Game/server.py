@@ -109,6 +109,7 @@ class EventHandler():
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        """Reception des messages"""
         message = self.Deserializer(evt.message)
         if evt.message=="":
             self.CloseClient(evt.client)
@@ -122,6 +123,11 @@ class EventHandler():
                 msg=self.GenerateMatrice(height, width, bombNbre)
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
+            elif message["message_body"]["name"] == "left_click":
+                x=message["message_body"]["args"][0]
+                y=message["message_body"]["args"][1]
+                for client in self.ClientList:
+                    self.SendMessage("instruct;left_click*{}*{}".format(x, y), client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
