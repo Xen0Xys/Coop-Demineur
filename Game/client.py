@@ -112,6 +112,7 @@ class Game():
         self.GameWin()
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClick)
+        self.bind("<Button-2>",self.OnRightClick)
         for i in range(self.nbrDeCaseHauteur.get()):
             for j in range(self.nbrDeCaselongueur.get()):
                 #on place l'image en x=J*25 y=I*25
@@ -119,30 +120,26 @@ class Game():
     def OnRightClick(self):
         pass
     def OnLeftClick(self,event):
-        if self.mat[event.x//25][event.y//25]==2:
-            print("vous avez explose")
-        if self.mat[event.x//25][event.y//25]==0:
-            pass
-        if self.mat[event.x//25][event.y//25]==1:
-            self.NbrDeBombeACoter=0
-            self.mat[event.x//25][event.y//25]=0
-            if self.mat[(event.x//25)+1][(event.y//25)]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)-1][(event.y//25)]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)][(event.y//25)+1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)][(event.y//25)-1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)+1][(event.y//25)+1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)+1][(event.y//25)-1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)-1][(event.y//25)+1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            if self.mat[(event.x//25)-1][(event.y//25)-1]==2:
-                self.NbrDeBombeACoter=self.NbrDeBombeACoter+1
-            print(self.NbrDeBombeACoter)
+        if 0<= (event.x//25)<=self.nbrDeCaselongueur.get()-1 and 0<= (event.y//25)<=self.nbrDeCaseHauteur.get()-1:
+            if self.mat[event.x//25][event.y//25]==2:
+                print("vous avez explose")
+            if self.mat[event.x//25][event.y//25]==0:
+                pass
+            if self.mat[event.x//25][event.y//25]==1:
+                self.nbrDeBombeACoter=0
+                self.mat[event.x//25][event.y//25]=0
+                a=1
+                b=1
+                for i in range(3):
+                    for j in range(3):
+                        try:
+                            if self.mat[(event.x//25)+a][(event.y//25)+b]==2:
+                                self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
+                        except IndexError:
+                            pass
+                        b=b-1
+                    a=a-1
+                print(self.nbrDeBombeACoter)
 
 
 class MenuPrincipal(Tk, Game):
