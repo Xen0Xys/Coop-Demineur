@@ -3,6 +3,7 @@ from time import sleep
 import socket
 import select
 import threading
+from random import randint
 
 class ClientMessage():
     def __init__(self, message, client):
@@ -69,7 +70,7 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
-    def GenerateMatrice(self, height, width):
+    def GenerateMatrice(self, height, width, bombeNbre):
         #Matrice
         Matrice=[]
         for i in range(width):
@@ -79,18 +80,18 @@ class EventHandler():
             Matrice.append(temp)
         #Bombes
         k=0
-        while k<self.nbrDeBombe.get():
+        while k<bombeNbre:
             k=k+1
-            r=randint(0, self.nbrDeCaselongueur.get()-1)
-            s=randint(0, self.nbrDeCaseHauteur.get()-1)
+            r=randint(0, width-1)
+            s=randint(0, height-1)
             if Matrice[r][s]==2:
                 k=k-1
             else:
                 Matrice[r][s]=2
         print(Matrice)
-        return SerializeMatrice(Matrice)
+        return self.SerializeMatrice(Matrice, height, width)
     def SerializeMatrice(self, Matrice, height, width):
-        final="instruct;start"
+        final="instruct;start*{}*{}".format(height, width)
         for i in range(len(Matrice)):
             for j in range(len(Matrice)):
                 final+="*" + str(Matrice[i][j])
@@ -114,9 +115,9 @@ class EventHandler():
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
             elif message["message_body"]["name"] == "start":
-                msg=self.GenerateMatrice()
+                msg=self.GenerateMatrice(10, 10, 10)
                 for client in self.ClientList:
-                    client.send("instruct;start*args".encode())
+                    client.send(msg.encode())
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
