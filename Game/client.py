@@ -75,6 +75,7 @@ class EventHandler():
                     print(message["message_body"]["args"][0])
                     self.clientCount.set("Clients connectes: {}".format(int(message["message_body"]["args"][0])))
                 elif message["message_body"]["name"] == "start":
+                    print(message["message_body"]["args"])
                     self.StartGame()
         print(evt.message)
 
