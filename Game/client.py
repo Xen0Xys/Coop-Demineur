@@ -83,7 +83,7 @@ class Game():
         pass
     def StartGame(self):
         self.ResetInterface()
-        self.geometry("800x800+10+10")
+        self.geometry("800x800")
         self.configure(bg="black")
         self.title("Demineur en cooperation")
         self.resizable(width=FALSE, height=FALSE)
@@ -113,33 +113,68 @@ class Game():
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClick)
         self.bind("<Button-2>",self.OnRightClick)
+        self.image_case_pleine = PhotoImage(file ='ressources/case_pleine.PNG')
+        self.image_case_vide = PhotoImage(file ='ressources/case_vide.PNG')
+        self.image_case_1 = PhotoImage(file ='ressources/case_1.PNG')
+        self.image_case_2 = PhotoImage(file ='ressources/case_2.PNG')
+        self.image_case_3 = PhotoImage(file ='ressources/case_3.PNG')
+        self.image_case_4 = PhotoImage(file ='ressources/case_4.PNG')
+        self.image_case_5 = PhotoImage(file ='ressources/case_5.PNG')
+        self.image_case_6 = PhotoImage(file ='ressources/case_6.PNG')
+        self.image_case_7 = PhotoImage(file ='ressources/case_7.PNG')
+        self.image_case_8 = PhotoImage(file ='ressources/case_8.PNG')
+        self.image_drapeau = PhotoImage(file ='ressources/drapeau.PNG')
+        self.image_explosion = PhotoImage(file ='ressources/explosion.PNG')
+        self.image_mine = PhotoImage(file ='ressources/mine.PNG')
+        self.image_point_interro = PhotoImage(file ='ressources/point_interro.PNG')
         for i in range(self.nbrDeCaseHauteur.get()):
             for j in range(self.nbrDeCaselongueur.get()):
-                #on place l'image en x=J*25 y=I*25
-                pass
+                self.interface.create_image(j*25,i*25, image=self.image_case_pleine, anchor=NW)
     def OnRightClick(self):
         pass
     def OnLeftClick(self,event):
         if 0<= (event.x//25)<=self.nbrDeCaselongueur.get()-1 and 0<= (event.y//25)<=self.nbrDeCaseHauteur.get()-1:
             if self.mat[event.x//25][event.y//25]==2:
-                print("vous avez explose")
+                self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_explosion, anchor=NW)
             if self.mat[event.x//25][event.y//25]==0:
                 pass
             if self.mat[event.x//25][event.y//25]==1:
                 self.nbrDeBombeACoter=0
                 self.mat[event.x//25][event.y//25]=0
                 a=1
-                b=1
                 for i in range(3):
+                    b=1
                     for j in range(3):
                         try:
-                            if self.mat[(event.x//25)+a][(event.y//25)+b]==2:
+
+                            if self.mat[(event.x//25)+a][(event.y//25)+b]==2 and (event.x//25)+a>=0 and (event.y//25)+b>=0:
                                 self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
                         except IndexError:
                             pass
                         b=b-1
                     a=a-1
                 print(self.nbrDeBombeACoter)
+                if self.nbrDeBombeACoter==0:
+                    #on change la case pleine en case vide
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_vide, anchor=NW)
+                elif self.nbrDeBombeACoter==1:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_1, anchor=NW)
+                elif self.nbrDeBombeACoter==2:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_2, anchor=NW)
+                elif self.nbrDeBombeACoter==3:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_3, anchor=NW)
+                elif self.nbrDeBombeACoter==4:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_4, anchor=NW)
+                elif self.nbrDeBombeACoter==5:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_5, anchor=NW)
+                elif self.nbrDeBombeACoter==6:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_6, anchor=NW)
+                elif self.nbrDeBombeACoter==7:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_7, anchor=NW)
+                elif self.nbrDeBombeACoter==8:
+                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_8, anchor=NW)
+            else:
+                pass
 
 
 class MenuPrincipal(Tk, Game):
