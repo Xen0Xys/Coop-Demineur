@@ -13,6 +13,7 @@ class ClientMessage():
 class Network():
     def __init__(self):
         self.serverOn=True
+        self.canAcceptClient=True
         self.ClientList=[]
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self):
@@ -37,9 +38,10 @@ class Network():
                 try:
                     rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
                     for connection in rlist:
-                        client, connectionInfos = connection.accept()
-                        self.ClientList.append(client)
-                        self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
+                        if self.canAcceptClient==True:
+                            client, connectionInfos = connection.accept()
+                            self.ClientList.append(client)
+                            self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
                 except OSError as e:
                     print(e)
                 except ValueError as e:
@@ -117,6 +119,7 @@ class EventHandler():
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
             elif message["message_body"]["name"] == "start":
+                self.canAcceptClient=False
                 height = int(message["message_body"]["args"][0])
                 width = int(message["message_body"]["args"][1])
                 bombNbre = int(message["message_body"]["args"][2])
