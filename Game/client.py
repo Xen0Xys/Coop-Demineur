@@ -106,20 +106,20 @@ class Game():
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClick)
         self.bind("<Button-2>",self.OnRightClick)
-        self.image_case_pleine = PhotoImage(file ='ressources/case_pleine.PNG')
-        self.image_case_vide = PhotoImage(file ='ressources/case_vide.PNG')
-        self.image_case_1 = PhotoImage(file ='ressources/case_1.PNG')
-        self.image_case_2 = PhotoImage(file ='ressources/case_2.PNG')
-        self.image_case_3 = PhotoImage(file ='ressources/case_3.PNG')
-        self.image_case_4 = PhotoImage(file ='ressources/case_4.PNG')
-        self.image_case_5 = PhotoImage(file ='ressources/case_5.PNG')
-        self.image_case_6 = PhotoImage(file ='ressources/case_6.PNG')
-        self.image_case_7 = PhotoImage(file ='ressources/case_7.PNG')
-        self.image_case_8 = PhotoImage(file ='ressources/case_8.PNG')
-        self.image_drapeau = PhotoImage(file ='ressources/drapeau.PNG')
-        self.image_explosion = PhotoImage(file ='ressources/explosion.PNG')
-        self.image_mine = PhotoImage(file ='ressources/mine.PNG')
-        self.image_point_interro = PhotoImage(file ='ressources/point_interro.PNG')
+        self.image_case_pleine = PhotoImage(file ='ressources/case_pleine.png')
+        self.image_case_vide = PhotoImage(file ='ressources/case_vide.png')
+        self.image_case_1 = PhotoImage(file ='ressources/case_1.png')
+        self.image_case_2 = PhotoImage(file ='ressources/case_2.png')
+        self.image_case_3 = PhotoImage(file ='ressources/case_3.png')
+        self.image_case_4 = PhotoImage(file ='ressources/case_4.png')
+        self.image_case_5 = PhotoImage(file ='ressources/case_5.png')
+        self.image_case_6 = PhotoImage(file ='ressources/case_6.png')
+        self.image_case_7 = PhotoImage(file ='ressources/case_7.png')
+        self.image_case_8 = PhotoImage(file ='ressources/case_8.png')
+        self.image_drapeau = PhotoImage(file ='ressources/drapeau.png')
+        self.image_explosion = PhotoImage(file ='ressources/explosion.png')
+        self.image_mine = PhotoImage(file ='ressources/mine.png')
+        self.image_point_interro = PhotoImage(file ='ressources/point_interro.png')
         for i in range(self.nbrDeCaseHauteur.get()):
             for j in range(self.nbrDeCaselongueur.get()):
                 self.interface.create_image(j*25,i*25, image=self.image_case_pleine, anchor=NW)
@@ -171,30 +171,30 @@ class Game():
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_8, anchor=NW)
         else:
             pass
-     def ActualisationCaseVide(self,x,y):
-            self.nbrDeBombeACoter=0
-            a=1
-            b=1
-            if self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
-                self.mat[x][y]=0
-                for i in range(3):
-                    b=1
-                    for j in range(3):
-                        try:
-                            if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()-1>=x+a>=0 and self.nbrDeCaseHauteur.get()-1>=y+b>=0:
-                                self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
-                        except IndexError:
-                            pass
-                        b=b-1
-                    a=a-1
-                print(self.nbrDeBombeACoter)
-            else:
-                self.nbrDeBombeACoter=9
-            if self.nbrDeBombeACoter==0:
-                self.ActualisationCaseVide(x=x+1,y=y)
-                self.ActualisationCaseVide(x=x-1,y=y)
-                self.ActualisationCaseVide(x=x,y=y-1)
-                self.ActualisationCaseVide(x=x,y=y+1)
+    def ActualisationCaseVide(self,x,y):
+        self.nbrDeBombeACoter=0
+        a=1
+        b=1
+        if self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
+            self.mat[x][y]=0
+            for i in range(3):
+                b=1
+                for j in range(3):
+                    try:
+                        if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()-1>=x+a>=0 and self.nbrDeCaseHauteur.get()-1>=y+b>=0:
+                            self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
+                    except IndexError:
+                        pass
+                    b=b-1
+                a=a-1
+            print(self.nbrDeBombeACoter)
+        else:
+            self.nbrDeBombeACoter=9
+        if self.nbrDeBombeACoter==0:
+            self.ActualisationCaseVide(x=x+1,y=y)
+            self.ActualisationCaseVide(x=x-1,y=y)
+            self.ActualisationCaseVide(x=x,y=y-1)
+            self.ActualisationCaseVide(x=x,y=y+1)
 
 
 
