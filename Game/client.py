@@ -98,26 +98,6 @@ class Game():
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.interface.pack()
-        self.CreateMatrice()
-    def CreateMatrice(self):
-        self.mat=[]
-        for i in range(self.nbrDeCaselongueur.get()):
-            temp=[]
-            for j in range(self.nbrDeCaseHauteur.get()):
-                temp.append(1)
-            self.mat.append(temp)
-        self.PlaceBombe()
-    def PlaceBombe(self):
-        k=0
-        while k<self.nbrDeBombe.get():
-            k=k+1
-            r=randint(0, self.nbrDeCaselongueur.get()-1)
-            s=randint(0, self.nbrDeCaseHauteur.get()-1)
-            if self.mat[r][s]==2:
-                k=k-1
-            else:
-                self.mat[r][s]=2
-        print(self.mat)
         self.GameWin()
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClick)
