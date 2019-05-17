@@ -69,10 +69,32 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
-    def GenerateMatrice(self):
-        return ""
-    def SerializeMatrice(self):
-        pass
+    def GenerateMatrice(self, height, width):
+        #Matrice
+        Matrice=[]
+        for i in range(width):
+            temp=[]
+            for j in range(height):
+                temp.append(1)
+            Matrice.append(temp)
+        #Bombes
+        k=0
+        while k<self.nbrDeBombe.get():
+            k=k+1
+            r=randint(0, self.nbrDeCaselongueur.get()-1)
+            s=randint(0, self.nbrDeCaseHauteur.get()-1)
+            if Matrice[r][s]==2:
+                k=k-1
+            else:
+                Matrice[r][s]=2
+        print(Matrice)
+        return SerializeMatrice(Matrice)
+    def SerializeMatrice(self, Matrice, height, width):
+        final="instruct;start"
+        for i in range(len(Matrice)):
+            for j in range(len(Matrice)):
+                final+="*" + str(Matrice[i][j])
+        return final
     def Deserializer(self, message):
         dico={}
         dico["message_type"] = message.split(";")[0]
