@@ -37,7 +37,7 @@ class Network():
                 try:
                     rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
                     for server in rlist:
-                        message = server.recv(1024).decode()
+                        message = server.recv(2048).decode()
                         evt = ClientMessage(message, server)
                         function(evt)
                 except OSError as e:
@@ -78,6 +78,7 @@ class EventHandler():
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
+        print(evt.message)
         if evt.message=="":
             self.server.close()
         else:
@@ -89,7 +90,6 @@ class EventHandler():
                 elif message["message_body"]["name"] == "start":
                     self.mat=self.DeserializeMatrice(message["message_body"]["args"])
                     self.StartGame()
-        print(evt.message)
 
 class Game():
     def __init__(self):
