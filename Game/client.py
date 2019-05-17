@@ -54,6 +54,18 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def DeserializeMatrice(self, args):
+        height=int(args[0])
+        del args[0]
+        width=int(args[0])
+        del args[0]
+        Matrice=[]
+        for i in range(width):
+            temp=[]
+            for j in range(height):
+                temp.append(int(args[i*height+j]))
+            Matrice.append(temp)
+        return Matrice
     def Deserializer(self, message):
         dico={}
         dico["message_type"] = message.split(";")[0]
@@ -75,7 +87,7 @@ class EventHandler():
                     print(message["message_body"]["args"][0])
                     self.clientCount.set("Clients connectes: {}".format(int(message["message_body"]["args"][0])))
                 elif message["message_body"]["name"] == "start":
-                    print(message["message_body"]["args"])
+                    self.mat=self.DeserializeMatrice(message["message_body"]["args"])
                     self.StartGame()
         print(evt.message)
 
