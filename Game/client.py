@@ -105,6 +105,11 @@ class EventHandler():
                     y = int(message["message_body"]["args"][1])
                     event=EventObject(x, y)
                     self.OnLeftClick(event)
+                elif message["message_body"]["name"] == "right_click":
+                    x = int(message["message_body"]["args"][0])
+                    y = int(message["message_body"]["args"][1])
+                    event=EventObject(x, y)
+                    self.OnRightClick(event)
 
 class Game():
     def __init__(self):
@@ -136,7 +141,9 @@ class Game():
                 self.interface.create_image(j*25,i*25, image=self.image_case_pleine, anchor=NW)
     def OnLeftClickServer(self, evt):
         self.SendMessage("instruct;left_click*{}*{}".format(evt.x, evt.y))
-    def OnRightClick(self):
+    def OnRightClickServer(self, evt):
+        self.SendMessage("instruct;right_click*{}*{}".format(evt.x, evt.y))
+    def OnRightClick(self, event):
         pass
     def OnLeftClick(self,event):
         self.coordX=event.x//25
