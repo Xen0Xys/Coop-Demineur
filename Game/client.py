@@ -222,8 +222,6 @@ class Game():
             self.ActualisationCaseVide(x=x,y=y-1)
             self.ActualisationCaseVide(x=x,y=y+1)
 
-
-
 class MenuPrincipal(Tk, Game):
     def __init__(self):
         Tk.__init__(self)
@@ -260,7 +258,10 @@ class MenuPrincipal(Tk, Game):
             self.FailedJoinMenu()
     def ResetInterface(self):
         for item in self.winfo_children():
-            item.destroy()
+            try:
+                item.destroy()
+            except TclError as e:
+                print(e)
     def InitInterface(self):
         self.geometry("800x800+10+10")
         self.configure(bg="black")
@@ -311,7 +312,7 @@ class MenuPrincipal(Tk, Game):
         nbrDeCaseLongueurScale.place(x=300,y=260)
         play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.WaitClientMenu)
         play.place(x=120,y=680)
-        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.destroy)
+        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
         retour.place(x=750,y=750)
     def LoadingMenuInterface(self, message=""):
         self.ResetInterface()
