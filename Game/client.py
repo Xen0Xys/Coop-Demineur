@@ -49,6 +49,8 @@ class Network():
                     print(e)
                 except ValueError as e:
                     print(e)
+                    self.StopClient()
+                    self.FailedJoinMenu()
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message):
