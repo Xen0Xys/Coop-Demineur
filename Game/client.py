@@ -151,10 +151,8 @@ class Game():
             a=a-1
         print(self.nbrDeBombeACoter)
         if self.nbrDeBombeACoter==0:
-            #on change la case pleine en case vide
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_vide, anchor=NW)
-            self.coordX=self.coordX+1
-            self.CalculBombeACote()
+            self.ActualisationCaseVide(x=self.coordX,y=self.coordY)
         elif self.nbrDeBombeACoter==1:
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_1, anchor=NW)
         elif self.nbrDeBombeACoter==2:
@@ -173,6 +171,30 @@ class Game():
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_8, anchor=NW)
         else:
             pass
+     def ActualisationCaseVide(self,x,y):
+            self.nbrDeBombeACoter=0
+            a=1
+            b=1
+            if self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
+                self.mat[x][y]=0
+                for i in range(3):
+                    b=1
+                    for j in range(3):
+                        try:
+                            if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()-1>=x+a>=0 and self.nbrDeCaseHauteur.get()-1>=y+b>=0:
+                                self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
+                        except IndexError:
+                            pass
+                        b=b-1
+                    a=a-1
+                print(self.nbrDeBombeACoter)
+            else:
+                self.nbrDeBombeACoter=9
+            if self.nbrDeBombeACoter==0:
+                self.ActualisationCaseVide(x=x+1,y=y)
+                self.ActualisationCaseVide(x=x-1,y=y)
+                self.ActualisationCaseVide(x=x,y=y-1)
+                self.ActualisationCaseVide(x=x,y=y+1)
 
 
 
