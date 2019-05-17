@@ -84,10 +84,6 @@ class Game():
         pass
     def StartGame(self):
         self.ResetInterface()
-        self.geometry("800x800")
-        self.configure(bg="black")
-        self.title("Demineur en cooperation")
-        self.resizable(width=FALSE, height=FALSE)
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.interface.pack()
         self.CreateMatrice()
@@ -134,48 +130,54 @@ class Game():
     def OnRightClick(self):
         pass
     def OnLeftClick(self,event):
-        if 0<= (event.x//25)<=self.nbrDeCaselongueur.get()-1 and 0<= (event.y//25)<=self.nbrDeCaseHauteur.get()-1:
-            if self.mat[event.x//25][event.y//25]==2:
-                self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_explosion, anchor=NW)
-            if self.mat[event.x//25][event.y//25]==0:
+        self.coordX=event.x//25
+        self.coordY=event.y//25
+        if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
+            if self.mat[self.coordX][self.coordY]==2:
+                self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
+            if self.mat[self.coordX][self.coordY]==0:
                 pass
-            if self.mat[event.x//25][event.y//25]==1:
-                self.nbrDeBombeACoter=0
-                self.mat[event.x//25][event.y//25]=0
-                a=1
-                for i in range(3):
-                    b=1
-                    for j in range(3):
-                        try:
+            if self.mat[self.coordX][self.coordY]==1:
+                self.CalculBombeACote()
+    def CalculBombeACote(self):
+        self.nbrDeBombeACoter=0
+        self.mat[self.coordX][self.coordY]=0
+        a=1
+        for i in range(3):
+            b=1
+            for j in range(3):
+                try:
+                    if self.mat[self.coordX+a][self.coordY+b]==2 and self.nbrDeCaselongueur.get()-1>=self.coordX+a>=0 and self.nbrDeCaseHauteur.get()-1>=self.coordY+b>=0:
+                        self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
+                except IndexError:
+                    pass
+                b=b-1
+            a=a-1
+        print(self.nbrDeBombeACoter)
+        if self.nbrDeBombeACoter==0:
+            #on change la case pleine en case vide
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_vide, anchor=NW)
+            self.coordX=self.coordX+1
+            self.CalculBombeACote()
+        elif self.nbrDeBombeACoter==1:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_1, anchor=NW)
+        elif self.nbrDeBombeACoter==2:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_2, anchor=NW)
+        elif self.nbrDeBombeACoter==3:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_3, anchor=NW)
+        elif self.nbrDeBombeACoter==4:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_4, anchor=NW)
+        elif self.nbrDeBombeACoter==5:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_5, anchor=NW)
+        elif self.nbrDeBombeACoter==6:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_6, anchor=NW)
+        elif self.nbrDeBombeACoter==7:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_7, anchor=NW)
+        elif self.nbrDeBombeACoter==8:
+            self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_8, anchor=NW)
+        else:
+            pass
 
-                            if self.mat[(event.x//25)+a][(event.y//25)+b]==2 and (event.x//25)+a>=0 and (event.y//25)+b>=0:
-                                self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
-                        except IndexError:
-                            pass
-                        b=b-1
-                    a=a-1
-                print(self.nbrDeBombeACoter)
-                if self.nbrDeBombeACoter==0:
-                    #on change la case pleine en case vide
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_vide, anchor=NW)
-                elif self.nbrDeBombeACoter==1:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_1, anchor=NW)
-                elif self.nbrDeBombeACoter==2:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_2, anchor=NW)
-                elif self.nbrDeBombeACoter==3:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_3, anchor=NW)
-                elif self.nbrDeBombeACoter==4:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_4, anchor=NW)
-                elif self.nbrDeBombeACoter==5:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_5, anchor=NW)
-                elif self.nbrDeBombeACoter==6:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_6, anchor=NW)
-                elif self.nbrDeBombeACoter==7:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_7, anchor=NW)
-                elif self.nbrDeBombeACoter==8:
-                    self.interface.create_image((event.x//25)*25,(event.y//25)*25, image=self.image_case_8, anchor=NW)
-            else:
-                pass
 
 
 class MenuPrincipal(Tk, Game):
