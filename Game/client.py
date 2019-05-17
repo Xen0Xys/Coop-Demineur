@@ -56,7 +56,11 @@ class Network():
     def SendMessage(self, message):
         threading.Thread(target=self.__SendMessage, args=(message,)).start()
     def __SendMessage(self, message):
-        self.server.send(message.encode())
+        try:
+            self.server.send(message.encode())
+        except OSError as e:
+            print(e)
+        
 
 class EventHandler():
     def __init__(self):
