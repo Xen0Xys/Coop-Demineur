@@ -20,19 +20,22 @@ class ClientMessage():
 class Network():
     def __init__(self):
         pass
-    def StartClient(self):
-        threading.Thread(target=self.__StartClient).start()
+    def StartClient(self, ip):
+        threading.Thread(target=self.__StartClient, args=(ip, )).start()
     def StopClient(self):
         self.clientOn=False
-    def __StartClient(self):
+    def __StartClient(self, ip):
         try:
             self.clientOn=True
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server.connect(("localhost", 1001))
+            self.server.connect((ip, 1001))
             self.SendMessage("message;dev_message*Client connecte")
         except RuntimeError as e:
             print(e)
         except ConnectionRefusedError as e:
+            print(e)
+            return False
+        except OSError as e:
             print(e)
             return False
         return True
@@ -237,11 +240,14 @@ class MenuPrincipal(Tk, Game):
             pass
         self.destroy()
     def StartHost(self):
-        threading.Thread(target=self.__StartHost).start()
-        self.StartJoin()
+        if self.Ip.get()!="":
+            threading.Thread(target=self.__StartHost).start()
+            self.StartJoin()
+        else:
+            self.FailedJoinMenu()
     def __StartHost(self):
         self.localServer=Server()
-        self.localServer.Start()
+        self.localServer.Start(self.Ip.get())
     def __StartGame(self):
         self.SendMessage("instruct;start*{}*{}*{}".format(self.nbrDeCaseHauteur.get(), self.nbrDeCaselongueur.get(), self.nbrDeBombe.get()))
     def __StopServer(self):
@@ -250,8 +256,12 @@ class MenuPrincipal(Tk, Game):
         threading.Thread(target=self.__StartJoin).start()
     def __StartJoin(self):
         self.loadingText.set("Connection au client en cours...")
-        status = self._Network__StartClient()
-        threading.Thread(target=self.StartEventHandler).start()
+        try:
+            status = self._Network__StartClient(self.Ip.get())
+            if status==True:
+                threading.Thread(target=self.StartEventHandler).start()
+        except ValueError:
+            status=False
         if status==True:
             self.loadingText.set("Connecte au client, en attente du lancement...")
         else:
@@ -279,7 +289,7 @@ class MenuPrincipal(Tk, Game):
         retour.place(x=750,y=750)
         creeUnePartie=Button(self.interface, text="Cree une partie",bg='#999999',width=50,height=4, font=self.font, command=self.MultiInterface)
         creeUnePartie.place(x=120,y=250)
-        rejoindreUnePartie=Button(self.interface, text="Rejondre une partie",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        rejoindreUnePartie=Button(self.interface, text="Rejondre une partie",bg='#999999',width=50,height=4, font=self.font, command=self.ChoiceIpHost)
         rejoindreUnePartie.place(x=120,y=400)
         nomLabel=Label(self.interface,font=self.font,text="Demineur en cooperation", bg="grey")
         nomLabel.place(x=310,y=20)
@@ -310,10 +320,29 @@ class MenuPrincipal(Tk, Game):
         nbrDeCaseLongueurLabel.place(x=20,y=270)
         nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
         nbrDeCaseLongueurScale.place(x=300,y=260)
+        #
+        self.Ip=StringVar()
+        Label(self, text="Ip:", font=self.font, bg='grey').place(x=20, y=450)
+        Entry(self, font=self.font, textvariable=self.Ip, bg="#999999").place(x=250, y=450)
+        #
         play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.WaitClientMenu)
         play.place(x=120,y=680)
-        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
+        retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
         retour.place(x=750,y=750)
+    def ChoiceIpHost(self):
+        self.ResetInterface()
+        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.font=Font(family="Helvetica",size=14)
+        self.font_bts_quitter=Font(family="Helvetica",size=10)
+        self.font2=Font(family="Helvetica",size=8)
+        self.interface.pack()
+        self.Ip=StringVar()
+        Label(self, text="Ip:", font=self.font, bg='grey').place(x=250, y=150)
+        Entry(self, font=self.font, textvariable=self.Ip, bg="#999999").place(x=250, y=175)
+        retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
+        retour.place(x=750,y=750)
+        creeUnePartie=Button(self.interface, text="Connection",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        creeUnePartie.place(x=120,y=550)
     def LoadingMenuInterface(self, message=""):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
@@ -333,9 +362,9 @@ class MenuPrincipal(Tk, Game):
         self.font_bts_quitter=Font(family="Helvetica",size=10)
         self.font2=Font(family="Helvetica",size=8)
         self.interface.pack()
-        retour=Button(self.interface, text="retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
+        retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.ChoiceIpHost)
         retour.place(x=750,y=750)
-        creeUnePartie=Button(self.interface, text="Reesayer",bg='#999999',width=50,height=4, font=self.font, command=self.LoadingMenuInterface)
+        creeUnePartie=Button(self.interface, text="Reesayer",bg='#999999',width=50,height=4, font=self.font, command=self.ChoiceIpHost)
         creeUnePartie.place(x=120,y=550)
         loadingTextLabel=Label(self.interface,font=self.font,text="La connection a echoue", bg="grey")
         loadingTextLabel.place(x=280,y=400)
