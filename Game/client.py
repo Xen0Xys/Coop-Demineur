@@ -181,7 +181,7 @@ class Game():
         print(self.nbrDeBombeACoter)
         if self.nbrDeBombeACoter==0:
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_vide, anchor=NW)
-            self.ActualisationCaseVide(x=self.coordX,y=self.coordY)
+            self.ActualisationCaseVide(self.coordX,self.coordY)
         elif self.nbrDeBombeACoter==1:
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_1, anchor=NW)
         elif self.nbrDeBombeACoter==2:
@@ -204,26 +204,54 @@ class Game():
         self.nbrDeBombeACoter=0
         a=1
         b=1
-        if self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
-            self.mat[x][y]=0
-            for i in range(3):
-                b=1
-                for j in range(3):
-                    try:
-                        if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()-1>=x+a>=0 and self.nbrDeCaseHauteur.get()-1>=y+b>=0:
-                            self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
-                    except IndexError:
-                        pass
-                    b=b-1
-                a=a-1
-            print(self.nbrDeBombeACoter)
-        else:
+        try:
+            if self.mat[x][y]==1:
+                if self.nbrDeCaselongueur.get()>=x>=0 and self.nbrDeCaseHauteur.get()>=y>=0:
+                    for i in range(3):
+                        b=1
+                        for j in range(3):
+                            try:
+                                if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
+                                    self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
+                            except IndexError:
+                                pass
+                            b=b-1
+                        a=a-1
+                else:
+                    self.nbrDeBombeACoter=9
+            else:
+                self.nbrDeBombeACoter=9
+        except IndexError:
             self.nbrDeBombeACoter=9
         if self.nbrDeBombeACoter==0:
-            self.ActualisationCaseVide(x=x+1,y=y)
-            self.ActualisationCaseVide(x=x-1,y=y)
-            self.ActualisationCaseVide(x=x,y=y-1)
-            self.ActualisationCaseVide(x=x,y=y+1)
+            self.mat[x][y]=0
+            self.interface.create_image(x*25,y*25, image=self.image_case_vide, anchor=NW)
+            self.ActualisationCaseVide(x+1,y)
+            self.ActualisationCaseVide(x-1,y)
+            self.ActualisationCaseVide(x,y-1)
+            self.ActualisationCaseVide(x,y+1)
+            self.ActualisationCaseVide(x+1,y+1)
+            self.ActualisationCaseVide(x-1,y-1)
+            self.ActualisationCaseVide(x-1,y+1)
+            self.ActualisationCaseVide(x+1,y-1)
+        elif self.nbrDeBombeACoter==1:
+            self.interface.create_image(x*25,y*25, image=self.image_case_1, anchor=NW)
+        elif self.nbrDeBombeACoter==2:
+            self.interface.create_image(x*25,y*25, image=self.image_case_2, anchor=NW)
+        elif self.nbrDeBombeACoter==3:
+            self.interface.create_image(x*25,y*25, image=self.image_case_3, anchor=NW)
+        elif self.nbrDeBombeACoter==4:
+            self.interface.create_image(x*25,y*25, image=self.image_case_4, anchor=NW)
+        elif self.nbrDeBombeACoter==5:
+            self.interface.create_image(x*25,y*25, image=self.image_case_5, anchor=NW)
+        elif self.nbrDeBombeACoter==6:
+            self.interface.create_image(x*25,y*25, image=self.image_case_6, anchor=NW)
+        elif self.nbrDeBombeACoter==7:
+            self.interface.create_image(x*25,y*25, image=self.image_case_7, anchor=NW)
+        elif self.nbrDeBombeACoter==8:
+            self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
+        elif self.nbrDeBombeACoter==9:
+            pass
 
 class MenuPrincipal(Tk, Game):
     def __init__(self):
