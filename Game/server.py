@@ -16,8 +16,8 @@ class Network():
         self.canAcceptClient=True
         self.ClientList=[]
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    def StartServer(self):
-        self.server.bind(("localhost", 1001))
+    def StartServer(self, ip):
+        self.server.bind((ip, 1001))
         self.server.listen(5)
         threading.Thread(target=self.AcceptClient).start()
     def CloseServer(self):
@@ -146,8 +146,8 @@ class Main(Network, EventHandler):
         Network.__init__(self)
         EventHandler.__init__(self)
         #self.Start()
-    def Start(self):
-        self.StartServer()
+    def Start(self, ip):
+        self.StartServer(ip)
         self.StartEventHandler()
 
 
