@@ -42,12 +42,18 @@ class Network():
                             client, connectionInfos = connection.accept()
                             self.ClientList.append(client)
                             self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
+                        else:
+                            client, connectionInfos = connection.accept()
+                            self.ClientList.append(client)
+                            self.OnNewClientJoin(client)
                 except OSError as e:
                     print(e)
                 except ValueError as e:
                     print(e)
         except RuntimeError as e:
             print(e)
+    def OnNewClientJoin(self, client):
+        self.SendMessage(self.formateMatrice, client)
     def GetMessages(self, function):
         try:
             while self.serverOn:
@@ -124,6 +130,7 @@ class EventHandler():
                 width = int(message["message_body"]["args"][1])
                 bombNbre = int(message["message_body"]["args"][2])
                 msg=self.GenerateMatrice(height, width, bombNbre)
+                self.formateMatrice=msg
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
             elif message["message_body"]["name"] == "left_click":
