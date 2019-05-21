@@ -63,7 +63,7 @@ class Network():
             self.server.send(message.encode())
         except OSError as e:
             print(e)
-        
+
 
 class EventHandler():
     def __init__(self):
@@ -350,6 +350,7 @@ class MenuPrincipal(Tk, Game):
         nbrDeCaseLongueurScale.place(x=300,y=260)
         #
         self.Ip=StringVar()
+        self.Ip.set("localhost")
         Label(self, text="Ip:", font=self.font, bg='grey').place(x=20, y=450)
         Entry(self, font=self.font, textvariable=self.Ip, bg="#999999").place(x=250, y=450)
         #
@@ -365,6 +366,7 @@ class MenuPrincipal(Tk, Game):
         self.font2=Font(family="Helvetica",size=8)
         self.interface.pack()
         self.Ip=StringVar()
+        self.Ip.set("localhost")
         Label(self, text="Ip:", font=self.font, bg='grey').place(x=250, y=150)
         Entry(self, font=self.font, textvariable=self.Ip, bg="#999999").place(x=250, y=175)
         retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
