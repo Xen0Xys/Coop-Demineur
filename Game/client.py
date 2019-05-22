@@ -130,7 +130,13 @@ class Game():
         self.GameWin()
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClickServer)
-        self.bind("<Button-2>",self.OnRightClick)
+        self.bind("<Button-3>",self.OnRightClick)
+        self.matClickDroit=[]
+        for i in range(self.nbrDeCaselongueur.get()):
+            temp=[]
+            for j in range(self.nbrDeCaseHauteur.get()):
+                temp.append(0)
+            self.matClickDroit.append(temp)
         self.image_case_pleine = PhotoImage(file ='ressources/case_pleine.png')
         self.image_case_vide = PhotoImage(file ='ressources/case_vide.png')
         self.image_case_1 = PhotoImage(file ='ressources/case_1.png')
@@ -153,16 +159,30 @@ class Game():
     def OnRightClickServer(self, evt):
         self.SendMessage("instruct;right_click*{}*{}".format(evt.x, evt.y))
     def OnRightClick(self, event):
-        pass
+        self.coordX=event.x//25
+        self.coordY=event.y//25
+        if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
+            if self.matClickDroit[self.coordX][self.coordY]==0 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                self.matClickDroit[self.coordX][self.coordY]=1
+                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_drapeau, anchor=NW)
+            elif self.matClickDroit[self.coordX][self.coordY]==1 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                self.matClickDroit[self.coordX][self.coordY]=2
+                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_point_interro, anchor=NW)
+            elif self.matClickDroit[self.coordX][self.coordY]==2 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                self.matClickDroit[self.coordX][self.coordY]=0
+                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_pleine, anchor=NW)
+        print(self.matClickDroit)
+
     def OnLeftClick(self,event):
         self.coordX=event.x//25
         self.coordY=event.y//25
         if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
-            if self.mat[self.coordX][self.coordY]==2:
+            if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
                 self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
+                self.mat[self.coordX][self.coordY]=3
             if self.mat[self.coordX][self.coordY]==0:
                 pass
-            if self.mat[self.coordX][self.coordY]==1:
+            if self.mat[self.coordX][self.coordY]==1 and self.matClickDroit[self.coordX][self.coordY]!=1:
                 self.CalculBombeACote()
     def CalculBombeACote(self):
         self.nbrDeBombeACoter=0
