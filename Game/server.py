@@ -67,7 +67,7 @@ class Network():
                     try:
                         rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
                         for client in rlist:
-                            message = client.recv(2048).decode()
+                            message = client.recv(4096).decode()
                             evt = ClientMessage(message, client)
                             function(evt)
                     except OSError as e:
