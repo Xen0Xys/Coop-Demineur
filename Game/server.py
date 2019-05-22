@@ -56,7 +56,7 @@ class Network():
     def OnNewClientJoin(self, client):
         self.SendMessage(self.formateMatrice, client)
         for item in self.EventList:
-            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
+            client.send("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25))
     def GetMessages(self, function):
         try:
             while self.serverOn:
