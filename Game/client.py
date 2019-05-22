@@ -45,7 +45,7 @@ class Network():
                 try:
                     rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
                     for server in rlist:
-                        message = server.recv(2048).decode()
+                        message = server.recv(4096).decode()
                         evt = ClientMessage(message, server)
                         function(evt)
                 except OSError as e:
@@ -365,15 +365,15 @@ class MenuPrincipal(Tk, Game):
         nomLabel.place(x=310,y=20)
         nbrDeCaseHauteurLabel=Label(self.interface,font=self.font,text="Nombre de case en hauteur:", bg="grey")
         nbrDeCaseHauteurLabel.place(x=20,y=170)
-        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
+        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
         nbrDeCaseHauteurScale.place(x=300,y=160)
         nbrDeBombeLabel=Label(self.interface,font=self.font,text="Nombre de bombes:", bg="grey")
         nbrDeBombeLabel.place(x=20,y=370)
-        nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=99,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
+        nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=150,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
         nbrDeBombeScale.place(x=300,y=360)
         nbrDeCaseLongueurLabel=Label(self.interface,font=self.font,text="Nombre de case en longueur:", bg="grey")
         nbrDeCaseLongueurLabel.place(x=20,y=270)
-        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=25,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
+        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
         nbrDeCaseLongueurScale.place(x=300,y=260)
         #
         self.Ip=StringVar()
