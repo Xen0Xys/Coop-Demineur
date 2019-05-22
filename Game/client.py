@@ -191,7 +191,7 @@ class Game():
             b=1
             for j in range(3):
                 try:
-                    if self.mat[self.coordX+a][self.coordY+b]==2 and self.nbrDeCaselongueur.get()-1>=self.coordX+a>=0 and self.nbrDeCaseHauteur.get()-1>=self.coordY+b>=0:
+                    if (self.mat[self.coordX+a][self.coordY+b]==2 or self.mat[self.coordX+a][self.coordY+b]==3) and self.nbrDeCaselongueur.get()-1>=self.coordX+a>=0 and self.nbrDeCaseHauteur.get()-1>=self.coordY+b>=0:
                         self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
                 except IndexError:
                     pass
@@ -230,7 +230,7 @@ class Game():
                         b=1
                         for j in range(3):
                             try:
-                                if self.mat[x+a][y+b]==2 and self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
+                                if (self.mat[x+a][y+b]==2 or self.mat[x+a][y+b]==3) and self.nbrDeCaselongueur.get()>=x+a>=0 and self.nbrDeCaseHauteur.get()>=y+b>=0:
                                     self.nbrDeBombeACoter=self.nbrDeBombeACoter+1
                             except IndexError:
                                 pass
@@ -279,6 +279,37 @@ class Game():
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
         elif self.nbrDeBombeACoter==9:
             pass
+    def checkVictory(self):
+        self.nombreDeCaseSansBombeNonDecouverte=0
+        for i in range(self.nbrDeCaselongueur.get()):
+            for j in range(self.nbrDeCaseHauteur.get()):
+                try:
+                    if self.mat[i][j]==1:
+                        self.nombreDeCaseSansBombeNonDecouverte=self.nombreDeCaseSansBombeNonDecouverte+1
+                except IndexError:
+                    pass
+        if self.nombreDeCaseSansBombeNonDecouverte==0:
+            self.WinOrNotWin="gagne"
+            self.WinFin()
+
+
+    def WinFin(self):
+        self.ResetInterface()
+        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.interface.pack()
+        self.font=Font(family="Helvetica",size=14)
+        self.font2=Font(family="Helvetica",size=54)
+        quitter=Button(self.interface, text="quitter",bg='#999999',width=50,height=4, font=self.font)
+        quitter.place(x=120,y=350)
+        recommencer=Button(self.interface, text="recommencer",bg='#999999',width=50,height=4, font=self.font)
+        recommencer.place(x=120,y=500)
+        if self.WinOrNotWin=="perdu":
+            nomLabel=Label(self.interface,font=self.font2,text="vous avez perdu", bg="grey")
+            nomLabel.place(x=120,y=100)
+        elif self.WinOrNotWin=="gagne":
+            nomLabel=Label(self.interface,font=self.font2,text="vous avez gagne", bg="grey")
+            nomLabel.place(x=120,y=100)
+
 
 class MenuPrincipal(Tk, Game):
     def __init__(self):
