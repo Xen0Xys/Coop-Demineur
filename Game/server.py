@@ -55,6 +55,8 @@ class Network():
             print(e)
     def OnNewClientJoin(self, client):
         self.SendMessage(self.formateMatrice, client)
+        for item in self.EventList:
+            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
     def GetMessages(self, function):
         try:
             while self.serverOn:
@@ -126,6 +128,7 @@ class EventHandler():
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
             elif message["message_body"]["name"] == "start":
+                self.EventList=[]
                 self.canAcceptClient=False
                 height = int(message["message_body"]["args"][0])
                 width = int(message["message_body"]["args"][1])
@@ -137,11 +140,32 @@ class EventHandler():
             elif message["message_body"]["name"] == "left_click":
                 x=message["message_body"]["args"][0]
                 y=message["message_body"]["args"][1]
+                #EventList
+                exist=False
+                for item in self.EventList:
+                    if item[0]=="left_click":
+                        if item[1]==x//25:
+                            if item[2]==y//25:
+                                exist=True
+                if exist==False:
+                    self.EventList.append(("left_click", x//25, y//25))
+                #//EventList
                 for client in self.ClientList:
                     self.SendMessage("instruct;left_click*{}*{}".format(x, y), client)
             elif message["message_body"]["name"] == "left_click":
                 x=message["message_body"]["args"][0]
                 y=message["message_body"]["args"][1]
+                #EventList
+                exist=False
+                for item in self.EventList:
+                    if item[0]=="right_click":
+                        if item[1]==x//25:
+                            if item[2]==y//25:
+                                exist=True
+                if exist==False:
+                    self.EventList.append(("right_click", x//25, y//25))
+                #//EventList
+                self.EventList.append(("right_click", x//25, y//25))
                 for client in self.ClientList:
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
         elif message["message_type"]=="message":
