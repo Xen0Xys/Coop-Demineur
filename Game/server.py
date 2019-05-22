@@ -54,9 +54,12 @@ class Network():
         except RuntimeError as e:
             print(e)
     def OnNewClientJoin(self, client):
+        print("Sending")
         self.SendMessage(self.formateMatrice, client)
         for item in self.EventList:
+            print("message send")
             client.send("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25))
+        print("sended")
     def GetMessages(self, function):
         try:
             while self.serverOn:
