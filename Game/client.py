@@ -27,6 +27,7 @@ class Network():
     def __StartClient(self, ip):
         try:
             self.clientOn=True
+            self.onSync=False
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server.connect((ip, 1001))
             self.SendMessage("message;dev_message*Client connecte")
@@ -108,16 +109,30 @@ class EventHandler():
                     self.clientCount.set("Clients connectes: {}".format(int(message["message_body"]["args"][0])))
                 elif message["message_body"]["name"] == "start":
                     self.mat=self.DeserializeMatrice(message["message_body"]["args"])
+                    if self.onSync==True:
+                        self.SendMessage("instruct;sync*receved")
                     self.StartGame()
                 elif message["message_body"]["name"] == "left_click":
                     x = int(message["message_body"]["args"][0])
                     y = int(message["message_body"]["args"][1])
                     event=EventObject(x, y)
+                    if self.onSync==True:
+                        self.SendMessage("instruct;sync*receved")
                     self.OnLeftClick(event)
                 elif message["message_body"]["name"] == "right_click":
                     x = int(message["message_body"]["args"][0])
                     y = int(message["message_body"]["args"][1])
                     event=EventObject(x, y)
+                    if self.onSync==True:
+                        self.SendMessage("instruct;sync*receved")
+                    self.OnRightClick(event)
+                elif message["message_body"]["name"] == "change_mode":
+                    if message["message_body"]["args"][0]=="enable":
+                        self.onSync=True
+                    elif message["message_body"]["args"][0]=="disable":
+                        self.onSync=False
+                    if self.onSync==True:
+                        self.SendMessage("instruct;sync*receved")
                     self.OnRightClick(event)
 
 class Game():
