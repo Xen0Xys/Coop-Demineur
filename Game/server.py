@@ -58,7 +58,7 @@ class Network():
         self.SendMessage(self.formateMatrice, client)
         for item in self.EventList:
             print("message send")
-            client.send("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25))
+            client.send("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25).encode())
         print("sended")
     def GetMessages(self, function):
         try:
