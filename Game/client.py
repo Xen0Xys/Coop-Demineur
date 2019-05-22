@@ -166,7 +166,6 @@ class Game():
                 self.CalculBombeACote()
     def CalculBombeACote(self):
         self.nbrDeBombeACoter=0
-        self.mat[self.coordX][self.coordY]=0
         a=1
         for i in range(3):
             b=1
@@ -235,20 +234,28 @@ class Game():
             self.ActualisationCaseVide(x-1,y+1)
             self.ActualisationCaseVide(x+1,y-1)
         elif self.nbrDeBombeACoter==1:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_1, anchor=NW)
         elif self.nbrDeBombeACoter==2:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_2, anchor=NW)
         elif self.nbrDeBombeACoter==3:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_3, anchor=NW)
         elif self.nbrDeBombeACoter==4:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_4, anchor=NW)
         elif self.nbrDeBombeACoter==5:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_5, anchor=NW)
         elif self.nbrDeBombeACoter==6:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_6, anchor=NW)
         elif self.nbrDeBombeACoter==7:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_7, anchor=NW)
         elif self.nbrDeBombeACoter==8:
+            self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
         elif self.nbrDeBombeACoter==9:
             pass
