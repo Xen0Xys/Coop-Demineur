@@ -138,8 +138,8 @@ class EventHandler():
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
             elif message["message_body"]["name"] == "left_click":
-                x=message["message_body"]["args"][0]
-                y=message["message_body"]["args"][1]
+                x=int(message["message_body"]["args"][0])
+                y=int(message["message_body"]["args"][1])
                 #EventList
                 exist=False
                 for item in self.EventList:
@@ -152,9 +152,9 @@ class EventHandler():
                 #//EventList
                 for client in self.ClientList:
                     self.SendMessage("instruct;left_click*{}*{}".format(x, y), client)
-            elif message["message_body"]["name"] == "left_click":
-                x=message["message_body"]["args"][0]
-                y=message["message_body"]["args"][1]
+            elif message["message_body"]["name"] == "right_click":
+                x=int(message["message_body"]["args"][0])
+                y=int(message["message_body"]["args"][1])
                 #EventList
                 exist=False
                 for item in self.EventList:
