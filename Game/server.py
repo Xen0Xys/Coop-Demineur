@@ -141,6 +141,7 @@ class EventHandler():
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
             elif message["message_body"]["name"] == "left_click":
+                print(self.EventList)
                 x=int(message["message_body"]["args"][0])
                 y=int(message["message_body"]["args"][1])
                 #EventList
