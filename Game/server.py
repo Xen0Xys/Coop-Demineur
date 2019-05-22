@@ -15,6 +15,7 @@ class Network():
         self.serverOn=True
         self.canAcceptClient=True
         self.ClientList=[]
+        self.EventList=[]
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self, ip):
         self.server.bind((ip, 1001))
