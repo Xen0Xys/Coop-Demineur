@@ -130,7 +130,7 @@ class Game():
         self.GameWin()
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClickServer)
-        self.bind("<Button-3>",self.OnRightClick)
+        self.bind("<Button-3>",self.OnRightClickServer)
         self.matClickDroit=[]
         for i in range(self.nbrDeCaselongueur.get()):
             temp=[]
