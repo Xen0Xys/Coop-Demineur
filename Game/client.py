@@ -131,9 +131,10 @@ class EventHandler():
                         self.onSync=True
                     elif message["message_body"]["args"][0]=="disable":
                         self.onSync=False
+                    print("Here")
                     if self.onSync==True:
-                        self.SendMessage("instruct;sync*receved")
-                    self.OnRightClick(event)
+                        print("Sending")
+                        self.SendMessage("instruct;sync*received")
 
 class Game():
     def __init__(self):
