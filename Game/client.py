@@ -110,14 +110,14 @@ class EventHandler():
                 elif message["message_body"]["name"] == "start":
                     self.mat=self.DeserializeMatrice(message["message_body"]["args"])
                     if self.onSync==True:
-                        self.SendMessage("instruct;sync*receved")
+                        self.SendMessage("instruct;sync*received")
                     self.StartGame()
                 elif message["message_body"]["name"] == "left_click":
                     x = int(message["message_body"]["args"][0])
                     y = int(message["message_body"]["args"][1])
                     event=EventObject(x, y)
                     if self.onSync==True:
-                        self.SendMessage("instruct;sync*receved")
+                        self.SendMessage("instruct;sync*received")
                     self.OnLeftClick(event)
                 elif message["message_body"]["name"] == "right_click":
                     x = int(message["message_body"]["args"][0])
