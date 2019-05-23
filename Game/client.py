@@ -58,10 +58,11 @@ class Network():
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message):
-        threading.Thread(target=self.__SendMessage, args=(message,)).start()
+        #threading.Thread(target=self.__SendMessage, args=(message,)).start()
+        self.__SendMessage(message + "/")
     def __SendMessage(self, message):
         try:
-            self.server.send(message.encode())
+            self.server.sendall(message.encode())
         except OSError as e:
             print(e)
 
@@ -87,6 +88,12 @@ class EventHandler():
         return Matrice
     def Deserializer(self, message):
         dico={}
+        reste=message.split("/")[1]
+        message=message.split("/")[0]
+        if reste!="":
+            evt = ClientMessage(reste + "/", self.server)
+            self.GetEvent(evt)
+            print("[Client] : Reste")
         dico["message_type"] = message.split(";")[0]
         dico2={}
         dico2["name"] = message.split(";")[1].split("*")[0]
@@ -124,7 +131,7 @@ class EventHandler():
                     y = int(message["message_body"]["args"][1])
                     event=EventObject(x, y)
                     if self.onSync==True:
-                        self.SendMessage("instruct;sync*receved")
+                        self.SendMessage("instruct;sync*received")
                     self.OnRightClick(event)
                 elif message["message_body"]["name"] == "change_mode":
                     if message["message_body"]["args"][0]=="enable":
