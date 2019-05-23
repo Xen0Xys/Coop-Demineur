@@ -61,7 +61,7 @@ class Network():
             while self.serverOn:
                 if len(self.ClientList)>0:
                     try:
-                        rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.05)
+                        rlist, wlist, xlist = select.select(self.ClientList, [], [], 0.001)
                         for client in rlist:
                             message = client.recv(4096).decode()
                             evt = ClientMessage(message, client)
@@ -84,14 +84,16 @@ class EventHandler():
         self.SyncList.append([client, -1])
         self.SendMessage("instruct;change_mode*enable", client)
     def SyncClient(self, client):
+        sleep(.1)
         index=0
         for i in range(len(self.SyncList)):
             if self.SyncList[i][0]==client:
                 index=i
+        print(self.SyncList, index)
         if self.SyncList[index][1]==-1:
             self.SyncList[index][1]=0
             self.SendMessage(self.formateMatrice, client)
-        if self.SyncList[index][1] >= len(self.EventList)-1:
+        if self.SyncList[index][1] > len(self.EventList):
                 self.SendMessage("instruct;change_mode*disable", client)
                 del self.SyncList[index]
         else:
