@@ -91,15 +91,17 @@ class EventHandler():
         if self.SyncList[index][1]==-1:
             self.SyncList[index][1]=0
             self.SendMessage(self.formateMatrice, client)
-        else:
-            ##Do Sync here
-            self.SyncList[index][1]+=1
-            item=self.EventList[self.SyncList[index][1]]
-            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25).encode(), client)
-            ##End Sync
-            if self.SyncList[index][1] >= len(self.EventList):
+        if self.SyncList[index][1] >= len(self.EventList)-1:
                 self.SendMessage("instruct;change_mode*disable", client)
                 del self.SyncList[index]
+        else:
+            print("client nbre: " + str(self.SyncList[index][1]))
+            print("server nbre: " + str(len(self.EventList)))
+            ##Do Sync here
+            item=self.EventList[self.SyncList[index][1]]
+            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
+            ##End Sync
+            self.SyncList[index][1]+=1
 
     def GenerateMatrice(self, height, width, bombeNbre):
         #Matrice
@@ -191,6 +193,7 @@ class EventHandler():
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
             elif message["message_body"]["name"] == "sync":
                 if message["message_body"]["args"][0] == "received":
+                    print("in sync")
                     self.SyncClient(evt.client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
