@@ -16,6 +16,7 @@ class Network():
         self.canAcceptClient=True
         self.ClientList=[]
         self.EventList=[]
+        self.SyncList=[]
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self, ip):
         self.server.bind((ip, 1001))
@@ -54,9 +55,7 @@ class Network():
         except RuntimeError as e:
             print(e)
     def OnNewClientJoin(self, client):
-        self.SendMessage(self.formateMatrice, client)
-        for item in self.EventList:
-            client.send("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25).encode())
+        threading.Thread(target=self.OnClientDoSync, args=(client,)).start()
     def GetMessages(self, function):
         try:
             while self.serverOn:
@@ -81,6 +80,27 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def OnClientDoSync(self, client):
+        self.SyncList.append([client, -1])
+        self.SendMessage("instruct;change_mode*enable", client)
+    def SyncClient(self, client):
+        index=0
+        for i in range(len(self.SyncList)):
+            if self.SyncList[i][0]==client:
+                index=i
+        if self.SyncList[index][1]==-1:
+            self.SyncList[index][1]=0
+            self.SendMessage(self.formateMatrice, client)
+        else:
+            ##Do Sync here
+            self.SyncList[index][1]+=1
+            item=self.EventList[self.SyncList[index][1]]
+            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25).encode(), client)
+            ##End Sync
+            if self.SyncList[index][1] >= len(self.EventList):
+                self.SendMessage("instruct;change_mode*disable", client)
+                del self.SyncList[index]
+
     def GenerateMatrice(self, height, width, bombeNbre):
         #Matrice
         Matrice=[]
@@ -169,6 +189,9 @@ class EventHandler():
                 self.EventList.append(("right_click", x//25, y//25))
                 for client in self.ClientList:
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
+            elif message["message_body"]["name"] == "sync":
+                if message["message_body"]["args"][0] == "received":
+                    self.SyncClient(evt.client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 print("[Server] : " + message["message_body"]["args"][0])
