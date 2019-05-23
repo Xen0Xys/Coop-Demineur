@@ -28,7 +28,6 @@ class Network():
         for client in self.ClientList:
             client.close()
         self.server.close()
-        print("Server closed")
     def CloseClient(self, client):
         client.close()
         for i in range(len(self.ClientList)):
@@ -50,9 +49,11 @@ class Network():
                             self.ClientList.append(client)
                             self.OnNewClientJoin(client)
                 except OSError as e:
-                    print(e)
+                    #print(e)
+                    pass
                 except ValueError as e:
-                    print(e)
+                    #print(e)
+                    pass
         except RuntimeError as e:
             print(e)
     def OnNewClientJoin(self, client):
@@ -68,9 +69,11 @@ class Network():
                             evt = ClientMessage(message, client)
                             function(evt)
                     except OSError as e:
-                        print(e)
+                        #print(e)
+                        pass
                     except ValueError as e:
-                        print(e)
+                        #print(e)
+                        pass
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, client):
@@ -94,7 +97,7 @@ class EventHandler():
             for i in range(len(self.SyncList)):
                 if self.SyncList[i][0]==client:
                     index=i
-            print(self.SyncList, index)
+            #print(self.SyncList, index)
             if self.SyncList[index][1]==-1:
                 self.SyncList[index][1]=0
                 self.SendMessage(self.formateMatrice, client)
@@ -102,8 +105,8 @@ class EventHandler():
                     self.SendMessage("instruct;change_mode*disable", client)
                     del self.SyncList[index]
             else:
-                print("client nbre: " + str(self.SyncList[index][1]))
-                print("server nbre: " + str(len(self.EventList)))
+                #print("client nbre: " + str(self.SyncList[index][1]))
+                #print("server nbre: " + str(len(self.EventList)))
                 ##Do Sync here
                 item=self.EventList[self.SyncList[index][1]]
                 self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
@@ -128,13 +131,11 @@ class EventHandler():
                 k=k-1
             else:
                 Matrice[r][s]=2
-        print(Matrice)
         return self.SerializeMatrice(Matrice, height, width)
     def SerializeMatrice(self, Matrice, height, width):
         final="instruct;start*{}*{}".format(height, width)
         for i in range(len(Matrice)):
             for j in range(len(Matrice)):
-                print(i*height+j)
                 final+="*" + str(Matrice[i][j])
         return final
     def Deserializer(self, message):
@@ -173,7 +174,6 @@ class EventHandler():
                 for client in self.ClientList:
                     self.SendMessage(msg, client)
             elif message["message_body"]["name"] == "left_click":
-                print(self.EventList)
                 x=int(message["message_body"]["args"][0])
                 y=int(message["message_body"]["args"][1])
                 #EventList
@@ -207,12 +207,12 @@ class EventHandler():
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
             elif message["message_body"]["name"] == "sync":
                 if message["message_body"]["args"][0] == "received":
-                    print("in sync")
                     self.SyncClient(evt.client)
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
-                print("[Server] : " + message["message_body"]["args"][0])
-        print(message)
+                #print("[Server] : " + message["message_body"]["args"][0])
+                pass
+        #print(message)
 
 class Main(Network, EventHandler):
     def __init__(self):
