@@ -17,10 +17,11 @@ class Network():
         self.ClientList=[]
         self.EventList=[]
         self.SyncList=[]
+        self.isSending=False
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self, ip):
         self.server.bind((ip, 1001))
-        self.server.listen(5)
+        self.server.listen(15)
         threading.Thread(target=self.AcceptClient).start()
     def CloseServer(self):
         self.serverOn=False
@@ -73,9 +74,13 @@ class Network():
         except RuntimeError as e:
             print(e)
     def SendMessage(self, message, client):
-        threading.Thread(target=self.__SendMessage, args=(message, client,)).start()
+        threading.Thread(target=self.__SendMessage, args=(message + "/", client,)).start()
     def __SendMessage(self, message, client):
-        client.send(message.encode())
+        try:
+            #print("[Server Message] : " + message)
+            client.sendall(message.encode())
+        except ConnectionResetError:
+            pass
 
 class EventHandler():
     def __init__(self):
@@ -84,26 +89,26 @@ class EventHandler():
         self.SyncList.append([client, -1])
         self.SendMessage("instruct;change_mode*enable", client)
     def SyncClient(self, client):
-        sleep(.1)
-        index=0
-        for i in range(len(self.SyncList)):
-            if self.SyncList[i][0]==client:
-                index=i
-        print(self.SyncList, index)
-        if self.SyncList[index][1]==-1:
-            self.SyncList[index][1]=0
-            self.SendMessage(self.formateMatrice, client)
-        if self.SyncList[index][1] > len(self.EventList):
-                self.SendMessage("instruct;change_mode*disable", client)
-                del self.SyncList[index]
-        else:
-            print("client nbre: " + str(self.SyncList[index][1]))
-            print("server nbre: " + str(len(self.EventList)))
-            ##Do Sync here
-            item=self.EventList[self.SyncList[index][1]]
-            self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
-            ##End Sync
-            self.SyncList[index][1]+=1
+        if len(self.SyncList)!=0:
+            index=0
+            for i in range(len(self.SyncList)):
+                if self.SyncList[i][0]==client:
+                    index=i
+            print(self.SyncList, index)
+            if self.SyncList[index][1]==-1:
+                self.SyncList[index][1]=0
+                self.SendMessage(self.formateMatrice, client)
+            if self.SyncList[index][1] > len(self.EventList)-1:
+                    self.SendMessage("instruct;change_mode*disable", client)
+                    del self.SyncList[index]
+            else:
+                print("client nbre: " + str(self.SyncList[index][1]))
+                print("server nbre: " + str(len(self.EventList)))
+                ##Do Sync here
+                item=self.EventList[self.SyncList[index][1]]
+                self.SendMessage("instruct;{}*{}*{}".format(item[0], item[1]*25, item[2]*25), client)
+                ##End Sync
+                self.SyncList[index][1]+=1
 
     def GenerateMatrice(self, height, width, bombeNbre):
         #Matrice
@@ -133,14 +138,20 @@ class EventHandler():
                 final+="*" + str(Matrice[i][j])
         return final
     def Deserializer(self, message):
-        dico={}
-        dico["message_type"] = message.split(";")[0]
-        dico2={}
-        dico2["name"] = message.split(";")[1].split("*")[0]
-        dico2["args"] = message.split(";")[1].split("*")
-        del dico2["args"][0]
-        dico["message_body"] = dico2
-        return dico
+        try:
+            dico={}
+            message=message.split("/")[0]
+            dico["message_type"] = message.split(";")[0]
+            dico2={}
+            dico2["name"] = message.split(";")[1].split("*")[0]
+            dico2["args"] = message.split(";")[1].split("*")
+            del dico2["args"][0]
+            dico["message_body"] = dico2
+            return dico
+        except IndexError:
+            dico={}
+            dico["message_type"] = "error_type"
+            return dico
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
@@ -182,15 +193,16 @@ class EventHandler():
                 y=int(message["message_body"]["args"][1])
                 #EventList
                 exist=False
+                """ A Patch pour optimisation
                 for item in self.EventList:
                     if item[0]=="right_click":
                         if item[1]==x//25:
                             if item[2]==y//25:
                                 exist=True
+                """
                 if exist==False:
                     self.EventList.append(("right_click", x//25, y//25))
                 #//EventList
-                self.EventList.append(("right_click", x//25, y//25))
                 for client in self.ClientList:
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
             elif message["message_body"]["name"] == "sync":
