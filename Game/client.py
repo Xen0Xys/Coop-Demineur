@@ -32,12 +32,13 @@ class Network():
             self.server.connect((ip, 1001))
             self.SendMessage("message;dev_message*Client connecte")
         except RuntimeError as e:
-            print(e)
+            #print(e)
+            pass
         except ConnectionRefusedError as e:
-            print(e)
+            #print(e)
             return False
         except OSError as e:
-            print(e)
+            #print(e)
             return False
         return True
     def GetMessages(self, function):
@@ -50,13 +51,15 @@ class Network():
                         evt = ClientMessage(message, server)
                         function(evt)
                 except OSError as e:
-                    print(e)
+                    #print(e)
+                    pass
                 except ValueError as e:
-                    print(e)
+                    #print(e)
                     self.StopClient()
                     self.FailedJoinMenu()
         except RuntimeError as e:
-            print(e)
+            #print(e)
+            pass
     def SendMessage(self, message):
         #threading.Thread(target=self.__SendMessage, args=(message,)).start()
         self.__SendMessage(message + "/")
@@ -64,8 +67,8 @@ class Network():
         try:
             self.server.sendall(message.encode())
         except OSError as e:
-            print(e)
-
+            #print(e)
+            pass
 
 class EventHandler():
     def __init__(self):
@@ -93,7 +96,6 @@ class EventHandler():
         if reste!="":
             evt = ClientMessage(reste + "/", self.server)
             self.GetEvent(evt)
-            print("[Client] : Reste")
         dico["message_type"] = message.split(";")[0]
         dico2={}
         dico2["name"] = message.split(";")[1].split("*")[0]
@@ -105,7 +107,7 @@ class EventHandler():
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
         """Recepton des messages"""
-        print(evt.message)
+        #print(evt.message)
         if evt.message=="":
             self.server.close()
         else:
@@ -138,7 +140,6 @@ class EventHandler():
                         self.onSync=True
                     elif message["message_body"]["args"][0]=="disable":
                         self.onSync=False
-                    print("Here")
                     if self.onSync==True:
                         print("Sending")
                         self.SendMessage("instruct;sync*received")
@@ -380,7 +381,8 @@ class MenuPrincipal(Tk, Game):
             try:
                 item.destroy()
             except TclError as e:
-                print(e)
+                #print(e)
+                pass
     def InitInterface(self):
         self.geometry("800x800+10+10")
         self.configure(bg="black")
