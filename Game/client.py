@@ -44,7 +44,7 @@ class Network():
         try:
             while self.clientOn:
                 try:
-                    rlist, wlist, xlist = select.select([self.server], [], [], 0.05)
+                    rlist, wlist, xlist = select.select([self.server], [], [], 0.001)
                     for server in rlist:
                         message = server.recv(4096).decode()
                         evt = ClientMessage(message, server)
