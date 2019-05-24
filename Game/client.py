@@ -150,7 +150,7 @@ class EventHandler():
             elif message["message_type"]=="game_info":
                 if message["message_body"]["name"] == "time":
                     time = message["message_body"]["args"][0]
-                    ##self.Function(time)
+                    self.time.set(time)
                     pass
 
 class Game():
@@ -223,7 +223,7 @@ class Game():
             if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
                 if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
                     self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
-                    self.clickAuto=True
+                    self.clickAuto=False
                     self.mat[self.coordX][self.coordY]=3
                 if self.mat[self.coordX][self.coordY]==0:
                     pass
@@ -334,7 +334,7 @@ class Game():
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
         elif self.nbrDeBombeACoter==9:
             pass
-        
+
     def WinCoteGrille(self):
         self.time=StringVar()
         self.time.set("0")
