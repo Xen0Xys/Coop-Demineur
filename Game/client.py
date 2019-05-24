@@ -159,9 +159,9 @@ class Game():
     def StartGame(self):
         self.ResetInterface()
         self.clickAuto=True
-        self.geometry("1000x800")
+        self.geometry("1050x800")
         self.configure(bg="black")
-        self.interface=Canvas(self,width=1000,height=800,bg='grey',bd=0)
+        self.interface=Canvas(self,width=1050,height=800,bg='grey',bd=0)
         self.interface.pack()
         self.nombreDeDrapeau=self.nbrDeBombe.get()
         self.GameWin()
