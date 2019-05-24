@@ -219,10 +219,9 @@ class EventHandler():
                             if self.EventList[i][2]==y//25:
                                 rightList.append(i)
                 if len(rightList)>2:
-                    del self.EventList[len(rightList)-1]
-                    del self.EventList[len(rightList)-2]
-                    del self.EventList[len(rightList)-3]
-                print(len(self.EventList))
+                    del self.EventList[rightList[len(rightList)-1]]
+                    del self.EventList[rightList[len(rightList)-2]]
+                    del self.EventList[rightList[len(rightList)-3]]
                 #//EventList
                 for client in self.ClientList:
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
