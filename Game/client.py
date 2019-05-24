@@ -368,7 +368,7 @@ class Game():
             self.PlaceBombeAfterVictoryOrDefeat()
 
     def PlaceBombeAfterVictoryOrDefeat(self):
-        if clickAuto==False:
+        if self.clickAuto==False:
             self.font3=Font(family="Helvetica",size=19)
             for i in range(self.nbrDeCaselongueur.get()):
                 for j in range(self.nbrDeCaseHauteur.get()):
