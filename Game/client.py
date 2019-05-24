@@ -150,7 +150,7 @@ class EventHandler():
             elif message["message_type"]=="game_info":
                 if message["message_body"]["name"] == "time":
                     time = message["message_body"]["args"][0]
-                    self.time.set(time)
+                    #self.time.set(time)
                     pass
 
 class Game():
