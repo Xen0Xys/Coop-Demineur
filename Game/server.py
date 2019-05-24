@@ -81,7 +81,7 @@ class Network():
     def __SendMessage(self, message, client):
         try:
             #print("[Server Message] : " + message)
-            client.sendall(message.encode())
+            client.send(message.encode())
         except ConnectionResetError:
             pass
 
@@ -141,7 +141,15 @@ class EventHandler():
     def Deserializer(self, message):
         try:
             dico={}
-            message=message.split("/")[0]
+            try:
+                reste=message.split("/")[1]
+                message=message.split("/")[0]
+                if reste!="":
+                    evt = ClientMessage(reste + "/", self.server)
+                    self.GetEvent(evt)
+            except IndexError as e:
+                #print(e)
+                pass
             dico["message_type"] = message.split(";")[0]
             dico2={}
             dico2["name"] = message.split(";")[1].split("*")[0]
@@ -153,6 +161,15 @@ class EventHandler():
             dico={}
             dico["message_type"] = "error_type"
             return dico
+    def SendTime(self):
+        self.localTime+=1
+        threading.Thread(target=self.__SendTime).start()
+    def __SendTime(self):
+        while self.localTime>-1 and self.serverOn==True:
+            for client in self.ClientList:
+                self.SendMessage("game_info;time*{}".format(self.localTime), client)
+            sleep(1)
+            self.localTime+=1
     def StartEventHandler(self):
         self.GetMessages(self.GetEvent)
     def GetEvent(self, evt):
@@ -164,6 +181,8 @@ class EventHandler():
             if message["message_body"]["name"] == "close_connection":
                 self.CloseClient(evt.client)
             elif message["message_body"]["name"] == "start":
+                self.localTime=-1
+                self.SendTime()
                 self.EventList=[]
                 self.canAcceptClient=False
                 height = int(message["message_body"]["args"][0])
@@ -193,7 +212,7 @@ class EventHandler():
                 y=int(message["message_body"]["args"][1])
                 #EventList
                 exist=False
-                """ A Patch pour optimisation
+                """ Un Patch pour optimisation
                 for item in self.EventList:
                     if item[0]=="right_click":
                         if item[1]==x//25:
