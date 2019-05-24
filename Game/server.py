@@ -55,7 +55,8 @@ class Network():
                     #print(e)
                     pass
         except RuntimeError as e:
-            print(e)
+            #print(e)
+            pass
     def OnNewClientJoin(self, client):
         threading.Thread(target=self.OnClientDoSync, args=(client,)).start()
     def GetMessages(self, function):
@@ -75,7 +76,8 @@ class Network():
                         #print(e)
                         pass
         except RuntimeError as e:
-            print(e)
+            #print(e)
+            pass
     def SendMessage(self, message, client):
         threading.Thread(target=self.__SendMessage, args=(message + "/", client,)).start()
     def __SendMessage(self, message, client):
@@ -135,7 +137,7 @@ class EventHandler():
     def SerializeMatrice(self, Matrice, height, width):
         final="instruct;start*{}*{}".format(height, width)
         for i in range(len(Matrice)):
-            for j in range(len(Matrice)):
+            for j in range(len(Matrice[i])):
                 final+="*" + str(Matrice[i][j])
         return final
     def Deserializer(self, message):
