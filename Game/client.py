@@ -196,7 +196,7 @@ class Game():
         self.SendMessage("instruct;left_click*{}*{}".format(evt.x, evt.y))
     def OnRightClickServer(self, evt):
         self.SendMessage("instruct;right_click*{}*{}".format(evt.x, evt.y))
-     def OnRightClick(self, event):
+    def OnRightClick(self, event):
         if self.clickAuto==True:
             self.coordX=event.x//25
             self.coordY=event.y//25
