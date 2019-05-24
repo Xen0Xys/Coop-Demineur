@@ -158,9 +158,14 @@ class Game():
         pass
     def StartGame(self):
         self.ResetInterface()
-        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
+        self.clickAuto=True
+        self.geometry("1000x800")
+        self.configure(bg="black")
+        self.interface=Canvas(self,width=1000,height=800,bg='grey',bd=0)
         self.interface.pack()
+        self.nombreDeDrapeau=self.nbrDeBombe.get()
         self.GameWin()
+        self.WinCoteGrille()
     def GameWin(self):
         self.bind("<Button-1>",self.OnLeftClickServer)
         self.bind("<Button-3>",self.OnRightClickServer)
@@ -191,32 +196,39 @@ class Game():
         self.SendMessage("instruct;left_click*{}*{}".format(evt.x, evt.y))
     def OnRightClickServer(self, evt):
         self.SendMessage("instruct;right_click*{}*{}".format(evt.x, evt.y))
-    def OnRightClick(self, event):
-        self.coordX=event.x//25
-        self.coordY=event.y//25
-        if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
-            if self.matClickDroit[self.coordX][self.coordY]==0 and self.mat[self.coordX][self.coordY] not in [0, 3]:
-                self.matClickDroit[self.coordX][self.coordY]=1
-                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_drapeau, anchor=NW)
-            elif self.matClickDroit[self.coordX][self.coordY]==1 and self.mat[self.coordX][self.coordY] not in [0, 3]:
-                self.matClickDroit[self.coordX][self.coordY]=2
-                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_point_interro, anchor=NW)
-            elif self.matClickDroit[self.coordX][self.coordY]==2 and self.mat[self.coordX][self.coordY] not in [0, 3]:
-                self.matClickDroit[self.coordX][self.coordY]=0
-                self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_pleine, anchor=NW)
-        print(self.matClickDroit)
+     def OnRightClick(self, event):
+        if self.clickAuto==True:
+            self.coordX=event.x//25
+            self.coordY=event.y//25
+            if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
+                if self.matClickDroit[self.coordX][self.coordY]==0 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                    self.matClickDroit[self.coordX][self.coordY]=1
+                    self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_drapeau, anchor=NW)
+                    self.nombreDeDrapeau=self.nombreDeDrapeau-1
+                    self.ActualiseNbreDrapeauVar()
+                elif self.matClickDroit[self.coordX][self.coordY]==1 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                    self.matClickDroit[self.coordX][self.coordY]=2
+                    self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_point_interro, anchor=NW)
+                    self.nombreDeDrapeau=self.nombreDeDrapeau+1
+                    self.ActualiseNbreDrapeauVar()
+                elif self.matClickDroit[self.coordX][self.coordY]==2 and self.mat[self.coordX][self.coordY] not in [0, 3]:
+                    self.matClickDroit[self.coordX][self.coordY]=0
+                    self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_pleine, anchor=NW)
+            print(self.matClickDroit)
 
     def OnLeftClick(self,event):
-        self.coordX=event.x//25
-        self.coordY=event.y//25
-        if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
-            if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
-                self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
-                self.mat[self.coordX][self.coordY]=3
-            if self.mat[self.coordX][self.coordY]==0:
-                pass
-            if self.mat[self.coordX][self.coordY]==1 and self.matClickDroit[self.coordX][self.coordY]!=1:
-                self.CalculBombeACote()
+        if self.clickAuto==True:
+            self.coordX=event.x//25
+            self.coordY=event.y//25
+            if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
+                if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
+                    self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
+                    self.clickAuto=False
+                    self.mat[self.coordX][self.coordY]=3
+                if self.mat[self.coordX][self.coordY]==0:
+                    pass
+                if self.mat[self.coordX][self.coordY]==1 and self.matClickDroit[self.coordX][self.coordY]!=1:
+                    self.CalculBombeACote()
     def CalculBombeACote(self):
         self.nbrDeBombeACoter=0
         a=1
@@ -236,22 +248,31 @@ class Game():
             self.ActualisationCaseVide(self.coordX,self.coordY)
         elif self.nbrDeBombeACoter==1:
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_1, anchor=NW)
+            self.mat[self.coordX][self.coordY]=0
         elif self.nbrDeBombeACoter==2:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_2, anchor=NW)
         elif self.nbrDeBombeACoter==3:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_3, anchor=NW)
         elif self.nbrDeBombeACoter==4:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_4, anchor=NW)
         elif self.nbrDeBombeACoter==5:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_5, anchor=NW)
         elif self.nbrDeBombeACoter==6:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_6, anchor=NW)
         elif self.nbrDeBombeACoter==7:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_7, anchor=NW)
         elif self.nbrDeBombeACoter==8:
+            self.mat[self.coordX][self.coordY]=0
             self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_8, anchor=NW)
         else:
             pass
+        self.CheckVictory()
     def ActualisationCaseVide(self,x,y):
         self.nbrDeBombeACoter=0
         a=1
@@ -286,6 +307,7 @@ class Game():
             self.ActualisationCaseVide(x-1,y-1)
             self.ActualisationCaseVide(x-1,y+1)
             self.ActualisationCaseVide(x+1,y-1)
+            self.CheckVictory()
         elif self.nbrDeBombeACoter==1:
             self.mat[x][y]=0
             self.interface.create_image(x*25,y*25, image=self.image_case_1, anchor=NW)
@@ -312,6 +334,7 @@ class Game():
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
         elif self.nbrDeBombeACoter==9:
             pass
+        
     def WinCoteGrille(self):
         self.time=StringVar()
         self.time.set("0")
@@ -328,6 +351,25 @@ class Game():
         recommencer.place(x=820,y=270)
         quitter=Button(self.interface, text="Quitter",bg='#999999',width=15,height=2, font=self.font)
         quitter.place(x=820,y=370)
+    def ActualiseNbreDrapeauVar(self):
+        self.nbrDrapeau.set(str(self.nombreDeDrapeau))
+
+    def CheckVictory(self):
+        self.nbrDeCaseNnDecouverte=0
+        for i in range(self.nbrDeCaselongueur.get()):
+            for j in range(self.nbrDeCaseHauteur.get()):
+                if self.mat[i][j]==1:
+                    self.nbrDeCaseNnDecouverte=self.nbrDeCaseNnDecouverte+1
+        if self.nbrDeCaseNnDecouverte==0:
+            self.clickAuto=False
+            self.PlaceBombeAfterVictoryOrDefeat()
+
+    """def PlaceBombeAfterVictoryOrDefeat():
+        for i in range(self.nbrDeCaselongueur.get()):
+            for j in range(self.nbrDeCaseHauteur.get()):
+                if self.mat[i][j]==2:
+                    self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_5, anchor=NW)"""
+
 
 
 
@@ -417,15 +459,15 @@ class MenuPrincipal(Tk, Game):
         nomLabel.place(x=310,y=20)
         nbrDeCaseHauteurLabel=Label(self.interface,font=self.font,text="Nombre de case en hauteur:", bg="grey")
         nbrDeCaseHauteurLabel.place(x=20,y=170)
-        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur, command=self.onHeightScaleChange)
+        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
         nbrDeCaseHauteurScale.place(x=300,y=160)
         nbrDeBombeLabel=Label(self.interface,font=self.font,text="Nombre de bombes:", bg="grey")
         nbrDeBombeLabel.place(x=20,y=370)
-        self.nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=150,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
-        self.nbrDeBombeScale.place(x=300,y=360)
+        nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=150,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
+        nbrDeBombeScale.place(x=300,y=360)
         nbrDeCaseLongueurLabel=Label(self.interface,font=self.font,text="Nombre de case en longueur:", bg="grey")
         nbrDeCaseLongueurLabel.place(x=20,y=270)
-        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur, command=self.onWidthScaleChange)
+        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
         nbrDeCaseLongueurScale.place(x=300,y=260)
         #
         self.Ip=StringVar()
@@ -437,12 +479,6 @@ class MenuPrincipal(Tk, Game):
         play.place(x=120,y=680)
         retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
         retour.place(x=750,y=750)
-    def onHeightScaleChange(self, evt):
-        self.nbrDeBombeScale["to"]=int(evt)*self.nbrDeCaselongueur.get()-1
-        self.nbrDeBombeScale["tickinterval"]=int(int(evt)*self.nbrDeCaselongueur.get()/12)
-    def onWidthScaleChange(self, evt):
-        self.nbrDeBombeScale["to"]=int(evt)*self.nbrDeCaseHauteur.get()-1
-        self.nbrDeBombeScale["tickinterval"]=int(int(evt)*self.nbrDeCaseHauteur.get()/12)
     def ChoiceIpHost(self):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
