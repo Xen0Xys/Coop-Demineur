@@ -417,15 +417,15 @@ class MenuPrincipal(Tk, Game):
         nomLabel.place(x=310,y=20)
         nbrDeCaseHauteurLabel=Label(self.interface,font=self.font,text="Nombre de case en hauteur:", bg="grey")
         nbrDeCaseHauteurLabel.place(x=20,y=170)
-        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur )
+        nbrDeCaseHauteurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaseHauteur, command=self.onHeightScaleChange)
         nbrDeCaseHauteurScale.place(x=300,y=160)
         nbrDeBombeLabel=Label(self.interface,font=self.font,text="Nombre de bombes:", bg="grey")
         nbrDeBombeLabel.place(x=20,y=370)
-        nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=150,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
-        nbrDeBombeScale.place(x=300,y=360)
+        self.nbrDeBombeScale=Scale(self.interface, orient='horizontal', from_=10, to=150,resolution=1, tickinterval=10, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeBombe)
+        self.nbrDeBombeScale.place(x=300,y=360)
         nbrDeCaseLongueurLabel=Label(self.interface,font=self.font,text="Nombre de case en longueur:", bg="grey")
         nbrDeCaseLongueurLabel.place(x=20,y=270)
-        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur )
+        nbrDeCaseLongueurScale=Scale(self.interface, orient='horizontal', from_=10, to=32,resolution=1, tickinterval=5, length=350,bg="grey",highlightthickness=0, variable=self.nbrDeCaselongueur, command=self.onWidthScaleChange)
         nbrDeCaseLongueurScale.place(x=300,y=260)
         #
         self.Ip=StringVar()
@@ -437,6 +437,12 @@ class MenuPrincipal(Tk, Game):
         play.place(x=120,y=680)
         retour=Button(self.interface, text="Retour",bg='#999999',width=4,height=2, font=self.font2, command=self.MultiPlayerChoice)
         retour.place(x=750,y=750)
+    def onHeightScaleChange(self, evt):
+        self.nbrDeBombeScale["to"]=int(evt)*self.nbrDeCaselongueur.get()-1
+        self.nbrDeBombeScale["tickinterval"]=int(int(evt)*self.nbrDeCaselongueur.get()/12)
+    def onWidthScaleChange(self, evt):
+        self.nbrDeBombeScale["to"]=int(evt)*self.nbrDeCaseHauteur.get()-1
+        self.nbrDeBombeScale["tickinterval"]=int(int(evt)*self.nbrDeCaseHauteur.get()/12)
     def ChoiceIpHost(self):
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
