@@ -349,8 +349,6 @@ class Game():
         nbrdrapeauLabel=Label(self.interface,font=self.font,textvariable=self.nbrDrapeau, bg="grey")
         nbrdrapeauLabel.place(x=890,y=70)
         self.interface.create_image(860,70, image=self.image_drapeau, anchor=NW)
-        recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=15,height=2, font=self.font)
-        recommencer.place(x=820,y=270)
         quitter=Button(self.interface, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font)
         quitter.place(x=820,y=570)
     def ActualiseNbreDrapeauVar(self):
