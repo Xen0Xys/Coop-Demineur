@@ -312,36 +312,23 @@ class Game():
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
         elif self.nbrDeBombeACoter==9:
             pass
-    def checkVictory(self):
-        self.nombreDeCaseSansBombeNonDecouverte=0
-        for i in range(self.nbrDeCaselongueur.get()):
-            for j in range(self.nbrDeCaseHauteur.get()):
-                try:
-                    if self.mat[i][j]==1:
-                        self.nombreDeCaseSansBombeNonDecouverte=self.nombreDeCaseSansBombeNonDecouverte+1
-                except IndexError:
-                    pass
-        if self.nombreDeCaseSansBombeNonDecouverte==0:
-            self.WinOrNotWin="gagne"
-            self.WinFin()
+    def WinCoteGrille(self):
+        self.time=StringVar()
+        self.time.set("0")
+        timeLabel=Label(self.interface,font=self.font,text="temps:", bg="grey")
+        timeLabel.place(x=820,y=170)
+        timeNbrLabel=Label(self.interface,font=self.font,textvariable=self.time, bg="grey")
+        timeNbrLabel.place(x=890,y=170)
+        self.nbrDrapeau=StringVar()
+        self.nbrDrapeau.set(str(self.nombreDeDrapeau))
+        nbrdrapeauLabel=Label(self.interface,font=self.font,textvariable=self.nbrDrapeau, bg="grey")
+        nbrdrapeauLabel.place(x=890,y=70)
+        self.interface.create_image(860,70, image=self.image_drapeau, anchor=NW)
+        recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=15,height=2, font=self.font)
+        recommencer.place(x=820,y=270)
+        quitter=Button(self.interface, text="Quitter",bg='#999999',width=15,height=2, font=self.font)
+        quitter.place(x=820,y=370)
 
-
-    def WinFin(self):
-        self.ResetInterface()
-        self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
-        self.interface.pack()
-        self.font=Font(family="Helvetica",size=14)
-        self.font2=Font(family="Helvetica",size=54)
-        quitter=Button(self.interface, text="quitter",bg='#999999',width=50,height=4, font=self.font)
-        quitter.place(x=120,y=350)
-        recommencer=Button(self.interface, text="recommencer",bg='#999999',width=50,height=4, font=self.font)
-        recommencer.place(x=120,y=500)
-        if self.WinOrNotWin=="perdu":
-            nomLabel=Label(self.interface,font=self.font2,text="vous avez perdu", bg="grey")
-            nomLabel.place(x=120,y=100)
-        elif self.WinOrNotWin=="gagne":
-            nomLabel=Label(self.interface,font=self.font2,text="vous avez gagne", bg="grey")
-            nomLabel.place(x=120,y=100)
 
 
 class MenuPrincipal(Tk, Game):
