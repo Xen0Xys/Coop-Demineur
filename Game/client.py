@@ -442,6 +442,8 @@ class MenuPrincipal(Tk, Game):
         self.MultiPlayerChoice()
     def MultiPlayerChoice(self):
         self.ResetInterface()
+        self.nbrDeBombe= IntVar()
+        self.nbrDeBombe.set(10)
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
         self.font_bts_quitter=Font(family="Helvetica",size=10)
