@@ -223,7 +223,7 @@ class Game():
             if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
                 if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
                     self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
-                    self.clickAuto=False
+                    self.clickAuto=True
                     self.mat[self.coordX][self.coordY]=3
                 if self.mat[self.coordX][self.coordY]==0:
                     pass
