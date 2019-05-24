@@ -221,9 +221,12 @@ class Game():
             self.coordX=event.x//25
             self.coordY=event.y//25
             if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
+                if 0<= (self.coordX)<=self.nbrDeCaselongueur.get()-1 and 0<= (self.coordY)<=self.nbrDeCaseHauteur.get()-1:
                 if self.mat[self.coordX][self.coordY]==2 and self.matClickDroit[self.coordX][self.coordY]!=1:
                     self.interface.create_image((self.coordX)*25,(self.coordY)*25, image=self.image_explosion, anchor=NW)
-                    self.clickAuto=False
+                    self.clickAuto=True
+                    self.victory=False
+                    self.PlaceBombeAfterVictoryOrDefeat()
                     self.mat[self.coordX][self.coordY]=3
                 if self.mat[self.coordX][self.coordY]==0:
                     pass
@@ -349,8 +352,8 @@ class Game():
         self.interface.create_image(860,70, image=self.image_drapeau, anchor=NW)
         recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=15,height=2, font=self.font)
         recommencer.place(x=820,y=270)
-        quitter=Button(self.interface, text="Quitter",bg='#999999',width=15,height=2, font=self.font)
-        quitter.place(x=820,y=370)
+        quitter=Button(self.interface, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font)
+        quitter.place(x=820,y=570)
     def ActualiseNbreDrapeauVar(self):
         self.nbrDrapeau.set(str(self.nombreDeDrapeau))
 
@@ -362,16 +365,24 @@ class Game():
                     self.nbrDeCaseNnDecouverte=self.nbrDeCaseNnDecouverte+1
         if self.nbrDeCaseNnDecouverte==0:
             self.clickAuto=False
+            self.victory=True
             self.PlaceBombeAfterVictoryOrDefeat()
 
     def PlaceBombeAfterVictoryOrDefeat(self):
+        self.font3=Font(family="Helvetica",size=19)
         for i in range(self.nbrDeCaselongueur.get()):
             for j in range(self.nbrDeCaseHauteur.get()):
                 if self.mat[i][j]==2:
                     if self.victory==True:
                         self.interface.create_image(i*25,j*25, image=self.image_mine, anchor=NW)
+                        victoryLabel=Label(self.interface,font=self.font3,text="Vous avez gagne", bg="grey")
+                        victoryLabel.place(x=820,y=370)
                     else:
-                        self.interface.create_image(i*25,j*25, image=self.image_ex, anchor=NW)
+                        self.interface.create_image(i*25,j*25, image=self.image_explosion, anchor=NW)
+                        lostLabel=Label(self.interface,font=self.font3,text="Vous avez perdu", bg="grey")
+                        lostLabel.place(x=830,y=370)
+        recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=18,height=2, font=self.font)
+        recommencer.place(x=820,y=670)
 
 
 
