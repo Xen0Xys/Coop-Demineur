@@ -368,20 +368,21 @@ class Game():
             self.PlaceBombeAfterVictoryOrDefeat()
 
     def PlaceBombeAfterVictoryOrDefeat(self):
-        self.font3=Font(family="Helvetica",size=19)
-        for i in range(self.nbrDeCaselongueur.get()):
-            for j in range(self.nbrDeCaseHauteur.get()):
-                if self.mat[i][j]==2:
-                    if self.victory==True:
-                        self.interface.create_image(i*25,j*25, image=self.image_mine, anchor=NW)
-                        victoryLabel=Label(self.interface,font=self.font3,text="Vous avez gagne", bg="grey")
-                        victoryLabel.place(x=820,y=370)
-                    else:
-                        self.interface.create_image(i*25,j*25, image=self.image_explosion, anchor=NW)
-                        lostLabel=Label(self.interface,font=self.font3,text="Vous avez perdu", bg="grey")
-                        lostLabel.place(x=830,y=370)
-        recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=18,height=2, font=self.font)
-        recommencer.place(x=820,y=670)
+        if clickAuto==False:
+            self.font3=Font(family="Helvetica",size=19)
+            for i in range(self.nbrDeCaselongueur.get()):
+                for j in range(self.nbrDeCaseHauteur.get()):
+                    if self.mat[i][j]==2:
+                        if self.victory==True:
+                            self.interface.create_image(i*25,j*25, image=self.image_mine, anchor=NW)
+                            victoryLabel=Label(self.interface,font=self.font3,text="Vous avez gagne", bg="grey")
+                            victoryLabel.place(x=820,y=370)
+                        else:
+                            self.interface.create_image(i*25,j*25, image=self.image_explosion, anchor=NW)
+                            lostLabel=Label(self.interface,font=self.font3,text="Vous avez perdu", bg="grey")
+                            lostLabel.place(x=830,y=370)
+            recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=18,height=2, font=self.font)
+            recommencer.place(x=820,y=670)
 
 
 
