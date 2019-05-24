@@ -65,7 +65,7 @@ class Network():
         self.__SendMessage(message + "/")
     def __SendMessage(self, message):
         try:
-            self.server.sendall(message.encode())
+            self.server.send(message.encode())
         except OSError as e:
             #print(e)
             pass
@@ -91,11 +91,15 @@ class EventHandler():
         return Matrice
     def Deserializer(self, message):
         dico={}
-        reste=message.split("/")[1]
-        message=message.split("/")[0]
-        if reste!="":
-            evt = ClientMessage(reste + "/", self.server)
-            self.GetEvent(evt)
+        try:
+            reste=message.split("/")[1]
+            message=message.split("/")[0]
+            if reste!="":
+                evt = ClientMessage(reste + "/", self.server)
+                self.GetEvent(evt)
+        except IndexError as e:
+            #print(e)
+            pass
         dico["message_type"] = message.split(";")[0]
         dico2={}
         dico2["name"] = message.split(";")[1].split("*")[0]
@@ -143,6 +147,11 @@ class EventHandler():
                     if self.onSync==True:
                         print("Sending")
                         self.SendMessage("instruct;sync*received")
+            elif message["message_type"]=="game_info":
+                if message["message_body"]["name"] == "time":
+                    time = message["message_body"]["args"][0]
+                    ##self.Function(time)
+                    pass
 
 class Game():
     def __init__(self):
