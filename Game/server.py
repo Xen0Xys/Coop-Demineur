@@ -211,16 +211,18 @@ class EventHandler():
                 x=int(message["message_body"]["args"][0])
                 y=int(message["message_body"]["args"][1])
                 #EventList
-                exist=False
-                """ Un Patch pour optimisation
-                for item in self.EventList:
-                    if item[0]=="right_click":
-                        if item[1]==x//25:
-                            if item[2]==y//25:
-                                exist=True
-                """
-                if exist==False:
-                    self.EventList.append(("right_click", x//25, y//25))
+                self.EventList.append(("right_click", x//25, y//25))
+                rightList=[]
+                for i in range(len(self.EventList)):
+                    if self.EventList[i][0]=="right_click":
+                        if self.EventList[i][1]==x//25:
+                            if self.EventList[i][2]==y//25:
+                                rightList.append(i)
+                if len(rightList)>2:
+                    del self.EventList[len(rightList)-1]
+                    del self.EventList[len(rightList)-2]
+                    del self.EventList[len(rightList)-3]
+                print(len(self.EventList))
                 #//EventList
                 for client in self.ClientList:
                     self.SendMessage("instruct;right_click*{}*{}".format(x, y), client)
