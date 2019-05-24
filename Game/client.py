@@ -364,12 +364,14 @@ class Game():
             self.clickAuto=False
             self.PlaceBombeAfterVictoryOrDefeat()
 
-    """def PlaceBombeAfterVictoryOrDefeat():
+    def PlaceBombeAfterVictoryOrDefeat(self):
         for i in range(self.nbrDeCaselongueur.get()):
             for j in range(self.nbrDeCaseHauteur.get()):
                 if self.mat[i][j]==2:
-                    self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_5, anchor=NW)"""
-
+                    if self.victory==True:
+                        self.interface.create_image(i*25,j*25, image=self.image_mine, anchor=NW)
+                    else:
+                        self.interface.create_image(i*25,j*25, image=self.image_ex, anchor=NW)
 
 
 
