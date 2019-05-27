@@ -359,7 +359,7 @@ class Game():
         nbrdrapeauLabel=Label(self.interface,font=self.font,textvariable=self.nbrDrapeau, bg="grey")
         nbrdrapeauLabel.place(x=890,y=70)
         self.interface.create_image(860,70, image=self.image_drapeau, anchor=NW)
-        quitter=Button(self.interface, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font, command=self.InitInterface)
+        quitter=Button(self.interface, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font, command=self.FermerLesConnection)
         quitter.place(x=820,y=570)
     def ActualiseNbreDrapeauVar(self):
         self.nbrDrapeau.set(str(self.nombreDeDrapeau))
@@ -392,7 +392,13 @@ class Game():
                             lostLabel.place(x=830,y=370)
             recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=18,height=2, font=self.font, command=self._MenuPrincipal__StartGame)
             recommencer.place(x=820,y=670)
-
+    def FermerLesConnection(self):
+        self.StopClient()
+        try:
+            self.localServer.CloseServer()
+        except AttributeError:
+            pass
+        self.InitInterface()
 
 
 
