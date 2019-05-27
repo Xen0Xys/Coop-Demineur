@@ -230,6 +230,10 @@ class EventHandler():
             elif message["message_body"]["name"] == "sync":
                 if message["message_body"]["args"][0] == "received":
                     self.SyncClient(evt.client)
+            elif message["message_body"]["name"] == "time":
+                if message["message_body"]["args"][0] == "stop":
+                    self.lastTime=self.localTime
+                    self.localTime=-2
         elif message["message_type"]=="message":
             if message["message_body"]["name"] == "dev_message":
                 #print("[Server] : " + message["message_body"]["args"][0])
