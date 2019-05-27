@@ -375,19 +375,21 @@ class Game():
             pass
 
     def WinCoteGrille(self):
+        self.interfaceCote=Canvas(self,width=250,height=800,bg='grey',bd=0,highlightthickness=0)
+        self.interfaceCote.place(x=800,y=0)
         self.time=StringVar()
         self.time.set("0")
-        timeLabel=Label(self.interface,font=self.font,text="temps:", bg="grey")
-        timeLabel.place(x=820,y=170)
-        timeNbrLabel=Label(self.interface,font=self.font,textvariable=self.time, bg="grey")
-        timeNbrLabel.place(x=890,y=170)
+        timeLabel=Label(self.interfaceCote,font=self.font,text="temps:", bg="grey")
+        timeLabel.place(x=20,y=170)
+        timeNbrLabel=Label(self.interfaceCote,font=self.font,textvariable=self.time, bg="grey")
+        timeNbrLabel.place(x=90,y=170)
         self.nbrDrapeau=StringVar()
         self.nbrDrapeau.set(str(self.nombreDeDrapeau))
-        nbrdrapeauLabel=Label(self.interface,font=self.font,textvariable=self.nbrDrapeau, bg="grey")
-        nbrdrapeauLabel.place(x=890,y=70)
-        self.interface.create_image(860,70, image=self.image_drapeau, anchor=NW)
-        quitter=Button(self.interface, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font, command=self.FermerLesConnection)
-        quitter.place(x=820,y=570)
+        nbrdrapeauLabel=Label(self.interfaceCote,font=self.font,textvariable=self.nbrDrapeau, bg="grey")
+        nbrdrapeauLabel.place(x=90,y=70)
+        self.interfaceCote.create_image(60,70, image=self.image_drapeau, anchor=NW)
+        quitter=Button(self.interfaceCote, text="Retour au menu",bg='#999999',width=18,height=2, font=self.font, command=self.FermerLesConnection)
+        quitter.place(x=20,y=570)
     def ActualiseNbreDrapeauVar(self):
         self.nbrDrapeau.set(str(self.nombreDeDrapeau))
 
