@@ -310,6 +310,8 @@ class Game():
             self.nbrDeBombeACoter=9
         if self.nbrDeBombeACoter==0:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_vide, anchor=NW)
             self.ActualisationCaseVide(x+1,y)
             self.ActualisationCaseVide(x-1,y)
@@ -320,30 +322,55 @@ class Game():
             self.ActualisationCaseVide(x-1,y+1)
             self.ActualisationCaseVide(x+1,y-1)
             self.CheckVictory()
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==1:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_1, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==2:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_2, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==3:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_3, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==4:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_4, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==5:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_5, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==6:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_6, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==7:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_7, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==8:
             self.mat[x][y]=0
+            if self.matClickDroit[x][y]==1:
+                self.nombreDeDrapeau=self.nombreDeDrapeau+1
             self.interface.create_image(x*25,y*25, image=self.image_case_8, anchor=NW)
+            self.ActualiseNbreDrapeauVar()
         elif self.nbrDeBombeACoter==9:
             pass
 
