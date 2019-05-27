@@ -166,8 +166,8 @@ class Game():
         self.clickAuto=True
         self.geometry("1050x800")
         self.configure(bg="black")
-        self.interface=Canvas(self,width=1050,height=800,bg='grey',bd=0)
-        self.interface.pack()
+        self.interface=Canvas(self,width=800,height=800,bg='grey',bd=0,highlightthickness=0)
+        self.interface.place(x=0,y=0)
         self.nombreTotalDeBombe=0
         for i in range(self.nbrDeCaselongueur.get()):
                 for j in range(self.nbrDeCaseHauteur.get()):
@@ -177,8 +177,8 @@ class Game():
         self.GameWin()
         self.WinCoteGrille()
     def GameWin(self):
-        self.bind("<Button-1>",self.OnLeftClickServer)
-        self.bind("<Button-3>",self.OnRightClickServer)
+        self.interface.bind("<Button-1>",self.OnLeftClickServer)
+        self.interface.bind("<Button-3>",self.OnRightClickServer)
         self.matClickDroit=[]
         for i in range(self.nbrDeCaselongueur.get()):
             temp=[]
