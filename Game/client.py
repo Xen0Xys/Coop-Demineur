@@ -73,6 +73,8 @@ class Network():
 class EventHandler():
     def __init__(self):
         pass
+    def PartiEnd(self):
+        self.SendMessage("instruct;time*stop")
     def DeserializeMatrice(self, args):
         height=int(args[0])
         self.nbrDeCaseHauteur=IntVar()
@@ -370,6 +372,7 @@ class Game():
 
     def PlaceBombeAfterVictoryOrDefeat(self):
         if self.clickAuto==False:
+            self.PartiEnd()
             self.font3=Font(family="Helvetica",size=19)
             for i in range(self.nbrDeCaselongueur.get()):
                 for j in range(self.nbrDeCaseHauteur.get()):
