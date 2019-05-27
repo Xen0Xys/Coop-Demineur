@@ -413,14 +413,14 @@ class Game():
                     if self.mat[i][j]==2:
                         if self.victory==True:
                             self.interface.create_image(i*25,j*25, image=self.image_mine, anchor=NW)
-                            victoryLabel=Label(self.interface,font=self.font3,text="Vous avez gagne", bg="grey")
-                            victoryLabel.place(x=820,y=370)
+                            victoryLabel=Label(self.interfaceCote,font=self.font3,text="Vous avez gagne", bg="grey")
+                            victoryLabel.place(x=20,y=370)
                         else:
                             self.interface.create_image(i*25,j*25, image=self.image_explosion, anchor=NW)
-                            lostLabel=Label(self.interface,font=self.font3,text="Vous avez perdu", bg="grey")
-                            lostLabel.place(x=830,y=370)
-            recommencer=Button(self.interface, text="Recommencer",bg='#999999',width=18,height=2, font=self.font, command=self._MenuPrincipal__StartGame)
-            recommencer.place(x=820,y=670)
+                            lostLabel=Label(self.interfaceCote,font=self.font3,text="Vous avez perdu", bg="grey")
+                            lostLabel.place(x=30,y=370)
+            recommencer=Button(self.interfaceCote, text="Recommencer",bg='#999999',width=18,height=2, font=self.font, command=self._MenuPrincipal__StartGame)
+            recommencer.place(x=20,y=670)
     def FermerLesConnection(self):
         self.StopClient()
         try:
