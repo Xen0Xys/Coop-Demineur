@@ -44,7 +44,7 @@ class Network():
                             client, connectionInfos = connection.accept()
                             self.ClientList.append(client)
                             self.SendMessage("instruct;client_account_changed*{}".format(len(self.ClientList)), self.ClientList[0])
-                        else:
+                        elif False==True:
                             client, connectionInfos = connection.accept()
                             self.ClientList.append(client)
                             self.OnNewClientJoin(client)
