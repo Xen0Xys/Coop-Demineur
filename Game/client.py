@@ -224,7 +224,7 @@ class Game():
                 elif self.matClickDroit[self.coordX][self.coordY]==2 and self.mat[self.coordX][self.coordY] not in [0, 3]:
                     self.matClickDroit[self.coordX][self.coordY]=0
                     self.interface.create_image(self.coordX*25,self.coordY*25, image=self.image_case_pleine, anchor=NW)
-            print(self.matClickDroit)
+
 
     def OnLeftClick(self,event):
         if self.clickAuto==True:
