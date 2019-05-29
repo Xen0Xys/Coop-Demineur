@@ -419,8 +419,11 @@ class Game():
                             self.interface.create_image(i*25,j*25, image=self.image_explosion, anchor=NW)
                             lostLabel=Label(self.interfaceCote,font=self.font3,text="Vous avez perdu", bg="grey")
                             lostLabel.place(x=30,y=370)
-            recommencer=Button(self.interfaceCote, text="Recommencer",bg='#999999',width=18,height=2, font=self.font, command=self._MenuPrincipal__StartGame)
-            recommencer.place(x=20,y=670)
+            if self.host==True:
+                recommencer=Button(self.interfaceCote, text="Recommencer",bg='#999999',width=18,height=2, font=self.font, command=self._MenuPrincipal__StartGame)
+                recommencer.place(x=20,y=670)
+            else:
+                pass
     def FermerLesConnection(self):
         self.StopClient()
         try:
@@ -503,6 +506,7 @@ class MenuPrincipal(Tk, Game):
         nomLabel=Label(self.interface,font=self.font,text="Demineur en cooperation", bg="grey")
         nomLabel.place(x=310,y=20)
     def MultiInterface(self):
+        self.host=True
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
@@ -546,6 +550,7 @@ class MenuPrincipal(Tk, Game):
         self.nbrDeBombeScale["to"]=int(evt)*self.nbrDeCaseHauteur.get()-1
         self.nbrDeBombeScale["tickinterval"]=int(int(evt)*self.nbrDeCaseHauteur.get()/12)
     def ChoiceIpHost(self):
+        self.host=False
         self.ResetInterface()
         self.interface=Canvas(self,width=900,height=900,bg='grey',bd=0)
         self.font=Font(family="Helvetica",size=14)
