@@ -537,6 +537,7 @@ class MenuPrincipal(Tk, Game):
         self.Ip=StringVar()
         self.Ip.set("localhost")
         Label(self, text="Ip:", font=self.font, bg='grey').place(x=20, y=450)
+        Button(self, text = "Set local ip", font=self.font, bg="#999999", command = lambda arg=socket.gethostbyname(socket.gethostname()):self.Ip.set(arg)).place(x=545, y=443)
         Entry(self, font=self.font, textvariable=self.Ip, bg="#999999").place(x=250, y=450)
         #
         play=Button(self.interface, text="Commencer a jouer",bg='#999999',width=50,height=4, font=self.font, command=self.WaitClientMenu)
