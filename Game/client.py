@@ -29,7 +29,7 @@ class Network():
             self.clientOn=True
             self.onSync=False
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server.connect((ip, 1001))
+            self.server.connect((ip, 10011))
             self.SendMessage("message;dev_message*Client connecte")
         except RuntimeError as e:
             #print(e)
