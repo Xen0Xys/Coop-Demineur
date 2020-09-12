@@ -20,7 +20,7 @@ class Network():
         self.isSending=False
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def StartServer(self, ip):
-        self.server.bind((ip, 1001))
+        self.server.bind((ip, 10011))
         self.server.listen(15)
         threading.Thread(target=self.AcceptClient).start()
     def CloseServer(self):
